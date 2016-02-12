@@ -1,0 +1,4 @@
+#!/bin/sh
+touch /etc/config/users
+echo "config user 'new'" > /etc/config/usersonfig/users
+exit 0
