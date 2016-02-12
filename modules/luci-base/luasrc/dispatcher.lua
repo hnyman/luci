@@ -916,3 +916,29 @@ translate = i18n.translate
 function _(text)
 	return text
 end
+
+-- get the current user anyway we can 
+-- if no user if found return "nobody"
+if fs.stat("/usr/lib/lua/luci/users.lua") then 
+    function get_user()
+    local fs = require "nixio.fs"
+    local http = require "luci.http"
+    local util = require "luci.util"
+    local sess = luci.http.getcookie("sysauth")
+    local sdat = (util.ubus("session", "get", { ubus_rpc_session = sess }) or { }).values
+    if sdat then 
+	  user = sdat.user
+	  return(user)
+    elseif http.formvalue("username") then
+	  user = http.formvalue("username")
+	  return(user)
+    elseif http.getenv("HTTP_AUTH_USER") then
+	  user = http.getenv("HTTP_AUTH_USER")
+	  return(user)
+    else
+	  user = "nobody"
+	  return(user)
+    end
+  end
+end
+
