@@ -1,4 +1,14 @@
 #!/bin/sh
-touch /etc/config/users
-echo "config user 'new'" > /etc/config/users
+
+if ! ((uci get users &> /dev/null)); then
+  touch "/etc/config/users"
+  uci set users.new=user
+  uci commit
+  exit 0
+elif ! ((uci get users.new &> /dev/null)); then
+  uci set users.new=user
+  uci commit
+  exit 0
+fi
+
 exit 0
