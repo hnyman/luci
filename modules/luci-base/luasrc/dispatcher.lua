@@ -598,15 +598,86 @@ function assign(path, clone, title, order)
 	return obj
 end
 
-function entry(path, target, title, order)
-	local c = node(unpack(path))
+if fs.stat("/usr/lib/lua/luci/users.lua") then 
+function parse_to_file(menu,item)
+  if not fs.stat("/tmp/menus") then
+    fs.mkdir("/tmp/menus")
+  end
+ if menu ~= "uci" and menu ~= "logout" and menu ~= "users" and menu ~= "network" then
+  local fname = "/tmp/menus/"..menu
+  if not fs.stat(fname) then
+    file = io.open(fname, "w+")
+    item = item:gsub("%s+", "_")
+    file:write(item.."\n")
+    file:close()
+  else
+    file = io.open(fname, "r")
+    for line in file:lines() do
+      if line == item then
+        file:close()
+        return
+      end
+    end
+    file = io.open(fname, "a")
+    item = item:gsub("%s+", "_")
+    file:write(item.."\n")
+    file:close()
+  end
+ end
+ return
+end
 
+function chk_access(con,sec,pos)
+  sec = sec:gsub("%s+", "_")
+  if user == "root" or user == "nobody" then return true end
+  if con == "users" then return true end
+  if con == "network" or con == "uci" or con == "logout" then return true end
+  if con == "status" and sec == "Overview" or sec == "Status" then return true end
+  if con == "services" and sec == "Services" then return true end
+  if pos == 30 and sec == "System" then sec = sec.."_menus" end
+  if not fs.access("/usr/lib/lua/luci/users.lua") then return true end
+  local menu = {}
+  local usw = require "luci.users"
+  local user = get_user()
+  menu = usw.hide_menus(user,con) or {}
+  if menu and #menu < 1 then return false end
+  for i,v in pairs(menu) do
+    if v == sec then return true end
+  end
+  --if util.contains(menu, sec) then return true end
+ return false
+end
+end
+
+if fs.stat("/usr/lib/lua/luci/users.lua") then 
+ function entry(path, target, title, order)
+	local c = {}
+	local user = get_user()
+        if user ~= "root" and path[2] and title then
+	 parse_to_file(path[2],title)
+         access = chk_access(path[2],title)
+	 if not access then return c end
+        end
+	local c = node(unpack(path))
+	c.target = target
+	c.title  = title
+	c.order  = order
+	c.module = getfenv(2)._NAME
+	return c
+ end
+
+else
+
+ function entry(path, target, title, order)
+	local c = node(unpack(path))
+	local user = get_user()
 	c.target = target
 	c.title  = title
 	c.order  = order
 	c.module = getfenv(2)._NAME
 
 	return c
+ end
 end
 
 -- enabling the node.
@@ -915,4 +986,47 @@ translate = i18n.translate
 -- is used by build/i18n-scan.pl to find translatable entries.
 function _(text)
 	return text
+end
+
+-- get the current user anyway we can 
+-- if no user if found return "nobody"
+if fs.stat("/usr/lib/lua/luci/users.lua") then 
+    function get_user()
+    local fs = require "nixio.fs"
+    local http = require "luci.http"
+    local util = require "luci.util"
+    local sess = luci.http.getcookie("sysauth")
+    local sdat = (util.ubus("session", "get", { ubus_rpc_session = sess }) or { }).values
+    if sdat then 
+	  user = sdat.user
+	  return(user)
+    elseif http.formvalue("username") then
+	  user = http.formvalue("username")
+	  return(user)
+    elseif http.getenv("HTTP_AUTH_USER") then
+	  user = http.getenv("HTTP_AUTH_USER")
+	  return(user)
+    else
+	  user = "nobody"
+	  return(user)
+    end
+  end
+
+
+  function load_menus()
+   local menus = {}
+   if fs.stat("/tmp/menus") then
+    for i,v in fs.dir("/tmp/menus") do
+      menus[i]={}
+      local file = assert(io.open("/tmp/menus/"..i, "r"))
+      for line in file:lines() do
+        if line ~= nil then
+          menus[i][#menus[i]+1] = line
+        end
+      end
+      file:close()
+    end
+   end
+   return menus
+  end
 end
