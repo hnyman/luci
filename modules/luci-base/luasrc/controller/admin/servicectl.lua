@@ -4,6 +4,7 @@
 module("luci.controller.admin.servicectl", package.seeall)
 
 function index()
+
 --## Multi User ##--
 local fs = require "nixio.fs"
 local valid_users = {}

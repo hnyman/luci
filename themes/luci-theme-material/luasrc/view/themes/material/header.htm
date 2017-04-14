@@ -129,6 +129,7 @@
     <link rel="apple-touch-icon-precomposed" href="<%=media%>/logo.png" sizes="144x144">
 
     <link rel="stylesheet" href="<%=media%>/css/style.css">
+    <link rel="stylesheet" href="<%=media%>/css/kspot.css">
     <link rel="shortcut icon" href="<%=media%>/favicon.ico">
     <% if node and node.css then %>
         <link rel="stylesheet" href="<%=resource%>/<%=node.css%>">
@@ -144,9 +145,10 @@
 <body class="lang_<%=luci.i18n.context.lang%> <%- if node then %><%= striptags( node.title ) %><%- end %> <% if luci.dispatcher.context.authsession then %>logged-in<% end %>">
 
 <header>
-	<div class="container">
-		<span class="showSide"></span>
-		<a class="brand" href="#"><%=boardinfo.hostname or "?"%></a>
+	<div class="">
+		<div id="logo" class="light-version">
+			<img src="<%=media%>/logo.png">
+        </div>
 		<div class="pull-right">
 		<%
 		-- calculate the number of unsaved changes

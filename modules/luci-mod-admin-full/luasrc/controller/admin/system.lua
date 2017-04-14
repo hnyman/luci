@@ -371,7 +371,7 @@ function action_passwd()
 
 	if p1 or p2 then
 		if p1 == p2 then
-			stat = luci.sys.user.setpasswd("root", p1)
+			stat = luci.sys.user.setpasswd("admin", p1)
 		else
 			stat = 10
 		end
