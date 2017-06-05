@@ -5,17 +5,48 @@
 module("luci.controller.admin.status", package.seeall)
 
 function index()
+	local fs = require "nixio.fs"
+
+         function user(val)
+	   if not fs.access("/usr/lib/lua/luci/users.lua") then return true end
+
+           local dsp = require "luci.dispatcher"
+           local usw = require "luci.users"
+           local user = dsp.get_user()
+	   if user == "root" then return true end
+           local name = "Status"
+
+	   local menu = {}
+	   menu = usw.hide_menus(user,name) or {}
+
+  	   for i,v in pairs(menu) do
+   	     if v == val then return true end
+  	   end
+  	   return false
+	  end
+
 	entry({"admin", "status"}, alias("admin", "status", "overview"), _("Status"), 20).index = true
 	entry({"admin", "status", "overview"}, template("admin_status/index"), _("Overview"), 1)
 
+	if user("Firewall") == true then
 	entry({"admin", "status", "iptables"}, template("admin_status/iptables"), _("Firewall"), 2).leaf = true
 	entry({"admin", "status", "iptables_action"}, post("action_iptables")).leaf = true
+	end
 
+	if user("Routes") == true then
 	entry({"admin", "status", "routes"}, template("admin_status/routes"), _("Routes"), 3)
+	end
+	if user("System_log") == true then
 	entry({"admin", "status", "syslog"}, call("action_syslog"), _("System Log"), 4)
+	end
+	if user("Kernel_log") == true then
 	entry({"admin", "status", "dmesg"}, call("action_dmesg"), _("Kernel Log"), 5)
+	end
+	if user("Processes") == true then
 	entry({"admin", "status", "processes"}, cbi("admin_status/processes"), _("Processes"), 6)
+	end
 
+	if user("Realtime_graphs") == true then
 	entry({"admin", "status", "realtime"}, alias("admin", "status", "realtime", "load"), _("Realtime Graphs"), 7)
 
 	entry({"admin", "status", "realtime", "load"}, template("admin_status/load"), _("Load"), 1).leaf = true
@@ -33,6 +64,7 @@ function index()
 	entry({"admin", "status", "realtime", "connections_status"}, call("action_connections")).leaf = true
 
 	entry({"admin", "status", "nameinfo"}, call("action_nameinfo")).leaf = true
+	end
 end
 
 function action_syslog()
