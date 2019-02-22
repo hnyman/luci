@@ -21,7 +21,7 @@ nw.init(m.uci)
 
 local zone = fw:get_zone(arg[1])
 if not zone then
-	luci.http.redirect(dsp.build_url("admin/network/firewall/zones"))
+	luci.http.redirect(ds.build_url("admin/network/firewall/zones"))
 	return
 else
 	m.title = "%s - %s" %{
@@ -68,12 +68,6 @@ function name.write(self, section, value)
 		out.exclude = value
 		inp.exclude = value
 	end
-
-	m.redirect = ds.build_url("admin/network/firewall/zones", value)
-	m.title = "%s - %s" %{
-		translate("Firewall - Zone Settings"),
-		translatef("Zone %q", value or "?")
-	}
 end
 
 p = {
@@ -107,9 +101,12 @@ end
 function net.write(self, section, value)
 	zone:clear_networks()
 
-	local n
-	for n in ut.imatch(value) do
-		zone:add_network(n)
+	local net
+	for net in ut.imatch(value) do
+		local n = nw:get_network(net) or nw:add_network(net, { proto = "none" })
+		if n then
+			zone:add_network(n:name())
+		end
 	end
 end
 

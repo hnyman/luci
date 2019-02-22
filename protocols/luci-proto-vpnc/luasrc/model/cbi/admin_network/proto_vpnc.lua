@@ -8,7 +8,7 @@ local authgroup, interface, passgroup, hexpassgroup
 local domain, vendor, natt_mode, dh_group
 local pfs, enable_single_des, enable_no_enc
 local mtu, local_addr, local_port, dpd_idle
-local auth_mode, target_network
+local auth_mode, target_network, defaultroute
 
 local ifc = net:get_interface():name()
 
@@ -67,7 +67,7 @@ enable_no_enc.default = enable_no_enc.disabled
 
 enable_single_des = section:taboption("general", Flag, "enable_single_des",
 	translate("Enable Single DES"),
-	translate("If checked, 1DES is enaled"))
+	translate("If checked, 1DES is enabled"))
 enable_no_enc.default = enable_single_des.disabled
 
 dpd_idle = section:taboption("general", Value, "dpd_idle", translate("DPD Idle Timeout"))
@@ -77,3 +77,9 @@ dpd_idle.placeholder = "600"
 ifname = section:taboption("general", Value, "target_network", translate("Target network"))
 port.placeholder = "0.0.0.0/0"
 port.datatype    = "network"
+
+defaultroute = section:taboption("general", ListValue, "defaultroute",
+	translate("Default Route"),
+	translate("Set VPN as Default Route"))
+defaultroute:value("0", translate("No"))
+defaultroute:value("1", translate("Yes"))

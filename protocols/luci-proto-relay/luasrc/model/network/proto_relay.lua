@@ -4,7 +4,7 @@
 local netmod = luci.model.network
 local device = luci.util.class(netmod.interface)
 
-netmod:register_pattern_virtual("^relay-%w")
+netmod:register_pattern_virtual("^relay%-%w")
 
 local proto = netmod:register_protocol("relay")
 
@@ -30,6 +30,11 @@ end
 
 function proto.is_virtual(self)
 	return true
+end
+
+function proto.is_up(self)
+	local iface = self:get_interface()
+	return iface and iface:is_up() or false
 end
 
 function proto.get_interface(self)
@@ -78,6 +83,10 @@ function proto.uptime(self)
 		end
 	end
 	return upt
+end
+
+function proto.errors(self)
+	return nil
 end
 
 

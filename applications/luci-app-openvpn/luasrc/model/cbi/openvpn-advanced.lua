@@ -1,9 +1,7 @@
 -- Copyright 2008 Steven Barth <steven@midlink.org>
 -- Licensed to the public under the Apache License 2.0.
 
-require("luci.ip")
-require("luci.model.uci")
-
+local fs = require("nixio.fs")
 
 local knownParams = {
 	--
@@ -160,6 +158,10 @@ local knownParams = {
 			"script_security",
 			{ 0, 1, 2, 3 },
 			translate("Policy level over usage of external programs and scripts") },
+		{ ListValue,
+			"compress",
+			{ "lzo", "lz4" },
+			translate("Enable a compression algorithm") },
 	} },
 
 	{ "Networking", {
@@ -204,10 +206,6 @@ local knownParams = {
 			"dev_node",
 			"/dev/net/tun",
 			translate("Use tun/tap device node") },
-		{ Flag,
-			"tun_ipv6",
-			0,
-			translate("Make tun device IPv6 capable") },
 		{ Value,
 			"ifconfig",
 			"10.200.200.3 10.200.200.1",
@@ -240,6 +238,10 @@ local knownParams = {
 			"route_nopull",
 			0,
 			translate("Don't pull routes automatically") },
+		{ Flag,
+			"allow_recursive_routing",
+			0,
+			translate("Don't drop incoming tun packets with same destination as host") },
 		{ ListValue,
 			"mtu_disc",
 			{ "yes", "maybe", "no" },
@@ -367,129 +369,117 @@ local knownParams = {
 			"server",
 			"10.200.200.0 255.255.255.0",
 			translate("Configure server mode"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"server_bridge",
 			"10.200.200.1 255.255.255.0 10.200.200.200 10.200.200.250",
 			translate("Configure server bridge"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ DynamicList,
 			"push",
 			{ "redirect-gateway", "comp-lzo" },
 			translate("Push options to peer"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Flag,
 			"push_reset",
 			0,
 			translate("Don't inherit global push options"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Flag,
 			"disable",
 			0,
 			translate("Client is disabled"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"ifconfig_pool",
 			"10.200.200.100 10.200.200.150 255.255.255.0",
 			translate("Set aside a pool of subnets"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"ifconfig_pool_persist",
 			"/etc/openvpn/ipp.txt 600",
 			translate("Persist/unpersist ifconfig-pool"),
-			{ server_mode="1" } },
-	-- deprecated and replaced by --topology p2p
-	--	{ Flag,
-	--		"ifconfig_pool_linear",
-	--		0,
-	--		translate("Use individual addresses rather than /30 subnets"),
-	--		{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"ifconfig_push",
 			"10.200.200.1 255.255.255.255",
 			translate("Push an ifconfig option to remote"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"iroute",
 			"10.200.200.0 255.255.255.0",
 			translate("Route subnet to client"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Flag,
 			"client_to_client",
 			0,
 			translate("Allow client-to-client traffic"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Flag,
 			"duplicate_cn",
 			0,
 			translate("Allow multiple clients with same certificate"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"client_config_dir",
 			"/etc/openvpn/ccd",
 			translate("Directory for custom client config files"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Flag,
 			"ccd_exclusive",
 			0,
 			translate("Refuse connection if no custom client config"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"tmp_dir",
 			"/var/run/openvpn",
 			translate("Temporary directory for client-connect return file"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"hash_size",
 			"256 256",
 			translate("Set size of real and virtual address hash tables"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"bcast_buffers",
 			256,
 			translate("Number of allocated broadcast buffers"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"tcp_queue_limit",
 			64,
 			translate("Maximum number of queued TCP output packets"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"max_clients",
 			10,
 			translate("Allowed maximum of connected clients"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"max_routes_per_client",
 			256,
 			translate("Allowed maximum of internal"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Value,
 			"connect_freq",
 			"3 10",
 			translate("Allowed maximum of new connections"),
-			{ server_mode="1" } },
-		{ Flag,
-			"client_cert_not_required",
-			0,
-			translate("Don't require client certificate"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Flag,
 			"username_as_common_name",
 			0,
 			translate("Use username as common name"),
-			{ server_mode="1" } },
+			{ client="0" }, { client="" } },
 		{ Flag,
 			"client",
 			0,
-			translate("Configure client mode"),
-			{ server_mode="0" }, { server_mode="" } },
+			translate("Configure client mode") },
 		{ Flag,
 			"pull",
 			0,
 			translate("Accept options pushed from server"),
 			{ client="1" } },
-		{ Value,
+		{ FileUpload,
 			"auth_user_pass",
 			"/etc/openvpn/userpass.txt",
 			translate("Authenticate using username/password"),
@@ -511,7 +501,7 @@ local knownParams = {
 			{ client="1" } },
 		{ Flag,
 			"remote_random",
-			1,
+			0,
 			translate("Randomly choose remote server"),
 			{ client="1" } },
 		{ ListValue,
@@ -565,6 +555,10 @@ local knownParams = {
 			{ "", "local", "def1", "local def1" },
 			translate("Automatically redirect default route"),
 			{ client="1" } },
+		{ Value,
+			"verify_client_cert",
+			{  "none", "optional", "require" },
+			translate("Specify whether the client is required to supply a valid certificate") },
 	} },
 
 	{ "Cryptography", {
@@ -580,7 +574,51 @@ local knownParams = {
 	-- parse
 		{ Value,
 			"cipher",
-			"BF-CBC",
+			{
+				"AES-128-CBC",
+				"AES-128-CFB",
+				"AES-128-CFB1",
+				"AES-128-CFB8",
+				"AES-128-GCM",
+				"AES-128-OFB",
+				"AES-192-CBC",
+				"AES-192-CFB",
+				"AES-192-CFB1",
+				"AES-192-CFB8",
+				"AES-192-GCM",
+				"AES-192-OFB",
+				"AES-256-CBC",
+				"AES-256-CFB",
+				"AES-256-CFB1",
+				"AES-256-CFB8",
+				"AES-256-GCM",
+				"AES-256-OFB",
+				"BF-CBC",
+				"BF-CFB",
+				"BF-OFB",
+				"CAST5-CBC",
+				"CAST5-CFB",
+				"CAST5-OFB",
+				"DES-CBC",
+				"DES-CFB",
+				"DES-CFB1",
+				"DES-CFB8",
+				"DES-EDE-CBC",
+				"DES-EDE-CFB",
+				"DES-EDE-OFB",
+				"DES-EDE3-CBC",
+				"DES-EDE3-CFB",
+				"DES-EDE3-CFB1",
+				"DES-EDE3-CFB8",
+				"DES-EDE3-OFB",
+				"DES-OFB",
+				"DESX-CBC",
+				"RC2-40-CBC",
+				"RC2-64-CBC",
+				"RC2-CBC",
+				"RC2-CFB",
+				"RC2-OFB"
+			},
 			translate("Encryption cipher for packets") },
 	-- parse
 		{ Value,
@@ -592,10 +630,6 @@ local knownParams = {
 			"engine",
 			"dynamic",
 			translate("Enable OpenSSL hardware crypto engines") },
-		{ Flag,
-			"no_replay",
-			0,
-			translate("Disable replay protection") },
 		{ Value,
 			"replay_window",
 			"64 15",
@@ -608,10 +642,6 @@ local knownParams = {
 			"replay_persist",
 			"/var/run/openvpn-replay-state",
 			translate("Persist replay-protection state") },
-		{ Flag,
-			"no_iv",
-			0,
-			translate("Disable cipher initialisation vector") },
 		{ Flag,
 			"tls_server",
 			0,
@@ -686,6 +716,10 @@ local knownParams = {
 			"tls_auth",
 			"/etc/openvpn/tlsauth.key",
 			translate("Additional authentication over TLS") },
+		{ Value,
+			"tls_crypt",
+			"/etc/openvpn/tlscrypt.key",
+			translate("Encrypt and authenticate all control channel packets with the key") },
 	--	{ Value,
 	--		"askpass",
 	--		"[file]",
@@ -718,10 +752,18 @@ local knownParams = {
 			"tls_version_max",
 			"1.2",
 			translate("The highest supported TLS version") },
-		{ Value,
+		{ ListValue,
 			"key_direction",
-			"1",
+			{ 0, 1 },
 			translate("The key direction for 'tls-auth' and 'secret' options") },
+		{ Flag,
+			"ncp_disable",
+			0,
+			translate("This completely disables cipher negotiation") },
+		{ Value,
+			"ncp_ciphers",
+			"AES-256-GCM:AES-128-GCM",
+			translate("Restrict the allowed ciphers to be negotiated") },
 	} }
 }
 
@@ -730,8 +772,10 @@ local cts = { }
 local params = { }
 
 local m = Map("openvpn")
-local p = m:section( SimpleSection )
+m.redirect = luci.dispatcher.build_url("admin", "services", "openvpn")
+m.apply_on_parse = true
 
+local p = m:section( SimpleSection )
 p.template = "openvpn/pageswitch"
 p.mode     = "advanced"
 p.instance = arg[1]
@@ -761,8 +805,44 @@ for _, option in ipairs(params) do
 		option[2], option[4]
 	)
 
+	o.optional = true
+
 	if option[1] == DummyValue then
 		o.value = option[3]
+	elseif option[1] == FileUpload then
+
+		function o.cfgvalue(self, section)
+			local cfg_val = AbstractValue.cfgvalue(self, section)
+
+			if cfg_val then
+				return cfg_val
+			end
+		end
+
+		function o.formvalue(self, section)
+			local sel_val = AbstractValue.formvalue(self, section)
+			local txt_val = luci.http.formvalue("cbid."..self.map.config.."."..section.."."..self.option..".textbox")
+
+			if sel_val and sel_val ~= "" then
+				return sel_val
+			end
+
+			if txt_val and txt_val ~= "" then
+				return txt_val
+			end
+		end
+
+		function o.remove(self, section)
+			local cfg_val = AbstractValue.cfgvalue(self, section)
+			local txt_val = luci.http.formvalue("cbid."..self.map.config.."."..section.."."..self.option..".textbox")
+			
+			if cfg_val and fs.access(cfg_val) and txt_val == "" then
+				fs.unlink(cfg_val)
+			end
+			return AbstractValue.remove(self, section)
+		end
+	elseif option[1] == Flag then
+		o.default = nil
 	else
 		if option[1] == DynamicList then
 			function o.cfgvalue(...)
@@ -770,8 +850,6 @@ for _, option in ipairs(params) do
 				return ( val and type(val) ~= "table" ) and { val } or val
 			end
 		end
-
-		o.optional = true
 
 		if type(option[3]) == "table" then
 			if o.optional then o:value("", "-- remove --") end

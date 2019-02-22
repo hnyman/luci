@@ -1,40 +1,137 @@
--- Copyright 2014-2016 Christian Schoenebeck <christian dot schoenebeck at gmail dot com>
+-- Copyright 2014-2018 Christian Schoenebeck <christian dot schoenebeck at gmail dot com>
 -- Licensed to the public under the Apache License 2.0.
 
 module("luci.tools.ddns", package.seeall)
 
 local NX   = require "nixio"
 local NXFS = require "nixio.fs"
-local OPKG = require "luci.model.ipkg"
 local UCI  = require "luci.model.uci"
 local SYS  = require "luci.sys"
-local UTIL = require "luci.util"
 
-local function _check_certs()
-	local _, v = NXFS.glob("/etc/ssl/certs/*.crt")
-	if ( v == 0 ) then _, v = NXFS.glob("/etc/ssl/certs/*.pem") end
-	return (v > 0)
+function env_info(type)
+
+	if ( type == "has_ssl" ) or ( type == "has_proxy" ) or ( type == "has_forceip" )
+	    or ( type == "has_bindnet" ) or ( type == "has_fetch" )
+		or ( type == "has_wgetssl" ) or ( type == "has_curl" )
+		or ( type == "has_curlssl" ) or ( type == "has_curlpxy" )
+		or ( type == "has_fetchssl" ) or ( type == "has_bbwget" ) then
+
+		local function has_wgetssl()
+			return (SYS.call( [[which wget-ssl >/dev/null 2>&1]] ) == 0)	-- and true or nil
+		end
+
+		local function has_curlssl()
+			return (SYS.call( [[$(which curl) -V 2>&1 | grep -qF "https"]] ) == 0)
+		end
+
+		local function has_fetch()
+			return (SYS.call( [[which uclient-fetch >/dev/null 2>&1]] ) == 0)
+		end
+
+		local function has_fetchssl()
+			return NXFS.access("/lib/libustream-ssl.so")
+		end
+
+		local function has_curl()
+			return (SYS.call( [[which curl >/dev/null 2>&1]] ) == 0)
+		end
+
+		local function has_curlpxy()
+			return (SYS.call( [[grep -i "all_proxy" /usr/lib/libcurl.so* >/dev/null 2>&1]] ) == 0)
+		end
+
+		local function has_bbwget()
+			return (SYS.call( [[$(which wget) -V 2>&1 | grep -iqF "busybox"]] ) == 0)
+		end
+
+		if type == "has_wgetssl" then
+			return has_wgetssl()
+
+		elseif type == "has_curl" then
+			return has_curl()
+
+		elseif type == "has_curlssl" then
+			return has_curlssl()
+
+		elseif type == "has_curlpxy" then
+			return has_curlpxy()
+
+		elseif type == "has_fetch" then
+			return has_fetch()
+
+		elseif type == "has_fetchssl" then
+			return has_fetchssl()
+
+		elseif type == "has_bbwget" then
+			return has_bbwget()
+
+		elseif type == "has_ssl" then
+			if has_wgetssl() then return true end
+			if has_curlssl() then return true end
+			if (has_fetch() and has_fetchssl()) then return true end
+			return false
+
+		elseif type == "has_proxy" then
+			if has_wgetssl() then return true end
+			if has_curlpxy() then return true end
+			if has_fetch() then return true end
+			if has_bbwget() then return true end
+			return false
+
+		elseif type == "has_forceip" then
+			if has_wgetssl() then return true end
+			if has_curl() then return true end
+			if has_fetch() then return true end -- only really needed for transfer
+			return false
+
+		elseif type == "has_bindnet" then
+			if has_curl() then return true end
+			if has_wgetssl() then return true end
+			return false
+		end
+
+	elseif ( type == "has_dnsserver" ) or ( type == "has_bindhost" ) or ( type == "has_hostip" ) or ( type == "has_nslookup" ) then
+		local function has_bindhost()
+			if (SYS.call( [[which host >/dev/null 2>&1]] ) == 0) then return true end
+			if (SYS.call( [[which khost >/dev/null 2>&1]] ) == 0) then return true end
+			if (SYS.call( [[which drill >/dev/null 2>&1]] ) == 0) then return true end
+			return false
+		end
+
+		local function has_hostip()
+			return (SYS.call( [[which hostip >/dev/null 2>&1]] ) == 0)
+		end
+
+		local function has_nslookup()
+			return (SYS.call( [[which nslookup >/dev/null 2>&1]] ) == 0)
+		end
+
+		if type == "has_bindhost" then
+			return has_bindhost()
+		elseif type == "has_hostip" then
+			return has_hostip()
+		elseif type == "has_nslookup" then
+			return has_nslookup()
+		elseif type == "has_dnsserver" then
+			if has_bindhost() then return true end
+			if has_hostip() then return true end
+			if has_nslookup() then return true end
+			return false
+		end
+
+	elseif type == "has_ipv6" then
+		return (NXFS.access("/proc/net/ipv6_route") and NXFS.access("/usr/sbin/ip6tables"))
+
+	elseif type == "has_cacerts" then
+		--old _check_certs() local function
+		local _, v = NXFS.glob("/etc/ssl/certs/*.crt")
+		if ( v == 0 ) then _, v = NXFS.glob("/etc/ssl/certs/*.pem") end
+		return (v > 0)
+	else
+		return
+	end
+
 end
-
-has_wgetssl	= (SYS.call( [[which wget-ssl >/dev/null 2>&1]] ) == 0)	-- and true or nil
-has_curl	= (SYS.call( [[which curl >/dev/null 2>&1]] ) == 0)
-has_curlssl	= (SYS.call( [[$(which curl) -V 2>&1 | grep "Protocols:" | grep -qF "https"]] ) ~= 0)
-has_curlpxy	= (SYS.call( [[grep -i "all_proxy" /usr/lib/libcurl.so* >/dev/null 2>&1]] ) == 0)
-has_fetch	= (SYS.call( [[which uclient-fetch >/dev/null 2>&1]] ) == 0)
-has_fetchssl	= NXFS.access("/lib/libustream-ssl.so")
-has_bbwget	= (SYS.call( [[$(which wget) -V 2>&1 | grep -iqF "busybox"]] ) == 0)
-has_bindhost	= (SYS.call( [[which host >/dev/null 2>&1]] ) == 0)
-		or (SYS.call( [[which khost >/dev/null 2>&1]] ) == 0)
-		or (SYS.call( [[which drill >/dev/null 2>&1]] ) == 0)
-has_hostip	= (SYS.call( [[which hostip >/dev/null 2>&1]] ) == 0)
-has_nslookup	= (SYS.call( [[$(which nslookup) localhost 2>&1 | grep -qF "(null)"]] ) ~= 0)
-has_ipv6	= (NXFS.access("/proc/net/ipv6_route") and NXFS.access("/usr/sbin/ip6tables"))
-has_ssl		= (has_wgetssl or has_curlssl or (has_fetch and has_fetchssl))
-has_proxy	= (has_wgetssl or has_curlpxy or has_fetch or has_bbwget)
-has_forceip	= (has_wgetssl or has_curl or has_fetch) -- only really needed for transfer
-has_dnsserver	= (has_bindhost or has_hostip or has_nslookup)
-has_bindnet	= (has_wgetssl or has_curl)
-has_cacerts	= _check_certs()
 
 -- function to calculate seconds from given interval and unit
 function calc_seconds(interval, unit)
@@ -72,6 +169,23 @@ function get_lastupd(section)
 	local etime = tonumber(NXFS.readfile("%s/%s.update" % { rdir, section } ) or 0 )
 	uci:unload("ddns")
 	return etime
+end
+
+-- read registered IP from [section].ip file
+function get_regip(section, chk_sec)
+	local uci   = UCI.cursor()
+	local rdir  = uci:get("ddns", "global", "ddns_rundir") or "/var/run/ddns"
+	local ip = "NOFILE"
+	if NXFS.access("%s/%s.ip" % { rdir, section }) then
+		local ftime = NXFS.stat("%s/%s.ip" % { rdir, section }, "ctime") or 0
+		local otime = os.time()
+		-- give ddns-scripts time (9 sec) to update file
+		if otime < (ftime + chk_sec + 9) then
+			ip = NXFS.readfile("%s/%s.ip" % { rdir, section })
+		end
+	end
+	uci:unload("ddns")
+	return ip
 end
 
 -- read PID from run file and verify if still running

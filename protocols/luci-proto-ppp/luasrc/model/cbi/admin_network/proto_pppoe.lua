@@ -30,13 +30,13 @@ service.placeholder = translate("auto")
 
 
 if luci.model.network:has_ipv6() then
-
-        ipv6 = section:taboption("advanced", ListValue, "ipv6")
-        ipv6:value("auto", translate("Automatic"))
-        ipv6:value("0", translate("Disabled"))
-        ipv6:value("1", translate("Manual"))
-        ipv6.default = "auto"
-
+	ipv6 = section:taboption("advanced", ListValue, "ipv6",
+		translate("Obtain IPv6-Address"),
+		translate("Enable IPv6 negotiation on the PPP link"))
+	ipv6:value("auto", translate("Automatic"))
+	ipv6:value("0", translate("Disabled"))
+	ipv6:value("1", translate("Manual"))
+	ipv6.default = "auto"
 end
 
 
@@ -103,7 +103,7 @@ function keepalive_interval.write(self, section, value)
 	if f > 0 then
 		m:set(section, "keepalive", "%d %d" %{ f, i })
 	else
-		m:del(section, "keepalive")
+		m:set(section, "keepalive", "0")
 	end
 end
 
@@ -112,6 +112,14 @@ keepalive_failure.write        = keepalive_interval.write
 keepalive_failure.remove       = keepalive_interval.write
 keepalive_interval.placeholder = "5"
 keepalive_interval.datatype    = "min(1)"
+
+
+host_uniq = section:taboption("advanced", Value, "host_uniq",
+	translate("Host-Uniq tag content"),
+	translate("Raw hex-encoded bytes. Leave empty unless your ISP require this"))
+
+host_uniq.placeholder = translate("auto")
+host_uniq.datatype    = "hexstring"
 
 
 demand = section:taboption("advanced", Value, "demand",

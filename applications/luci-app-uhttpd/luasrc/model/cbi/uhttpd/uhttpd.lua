@@ -42,7 +42,7 @@ function lhttp.validate(self, value, section)
 		end
 	end
 	if not (have_http_listener or have_https_listener) then
-		return nil, "must listen on at list one address:port"
+		return nil, "must listen on at least one address:port"
 	end
 	return DynamicList.validate(self, value, section)
 end
@@ -78,7 +78,7 @@ function lhttps.validate(self, value, section)
 		end
 	end
 	if not (have_http_listener or have_https_listener) then
-		return nil, "must listen on at list one address:port"
+		return nil, "must listen on at least one address:port"
 	end
 	return DynamicList.validate(self, value, section)
 end
@@ -202,14 +202,17 @@ o = ucs:taboption("advanced", Value, "max_requests", translate("Maximum number o
 o.optional = true
 o.datatype = "uinteger"
 
-local s = m:section(NamedSection, "px5g", "cert", translate("uHTTPd Self-signed Certificate Parameters"))
+local s = m:section(TypedSection, "cert", translate("uHTTPd Self-signed Certificate Parameters"))
+
+s.template  = "cbi/tsection"
+s.anonymous = true
 
 o = s:option(Value, "days", translate("Valid for # of Days"))
 o.default = 730
 o.datatype = "uinteger"
 
 o = s:option(Value, "bits", translate("Length of key in bits"))
-o.default = 1024
+o.default = 2048
 o.datatype = "min(1024)"
 
 o = s:option(Value, "commonname", translate("Server Hostname"), translate("a.k.a CommonName"))
@@ -222,6 +225,6 @@ o = s:option(Value, "state", translate("State"))
 o.default = "Unknown"
 
 o = s:option(Value, "location", translate("Location"))
-o.default = "Somewhere"
+o.default = "Unknown"
 
 return m

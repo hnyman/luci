@@ -3,30 +3,28 @@
 
 module("luci.statistics.rrdtool", package.seeall)
 
-require("luci.statistics.datatree")
-require("luci.statistics.rrdtool.colors")
-require("luci.statistics.i18n")
-require("luci.model.uci")
-require("luci.util")
-require("luci.sys")
+local tree   = require("luci.statistics.datatree")
+local colors = require("luci.statistics.rrdtool.colors")
+local i18n   = require("luci.statistics.i18n")
+local uci    = require("luci.model.uci").cursor()
+local util   = require("luci.util")
+local sys    = require("luci.sys")
+local fs     = require("nixio.fs")
 
-local fs = require "nixio.fs"
 
-
-Graph = luci.util.class()
+Graph = util.class()
 
 function Graph.__init__( self, timespan, opts )
 
 	opts = opts or { }
 
-	local uci = luci.model.uci.cursor()
 	local sections = uci:get_all( "luci_statistics" )
 
 	-- options
 	opts.timespan  = timespan       or sections.rrdtool.default_timespan or 900
 	opts.rrasingle = opts.rrasingle or ( sections.collectd_rrdtool.RRASingle == "1" )
 	opts.rramax    = opts.rramax    or ( sections.collectd_rrdtool.RRAMax == "1" )
-	opts.host      = opts.host      or sections.collectd.Hostname        or luci.sys.hostname()
+	opts.host      = opts.host      or sections.collectd.Hostname        or sys.hostname()
 	opts.width     = opts.width     or sections.rrdtool.image_width      or 400
 	opts.rrdpath   = opts.rrdpath   or sections.collectd_rrdtool.DataDir or "/tmp/rrd"
 	opts.imgpath   = opts.imgpath   or sections.rrdtool.image_path       or "/tmp/rrdimg"
@@ -34,9 +32,9 @@ function Graph.__init__( self, timespan, opts )
 	opts.imgpath   = opts.imgpath:gsub("/$","")
 
 	-- helper classes
-	self.colors = luci.statistics.rrdtool.colors.Instance()
-	self.tree   = luci.statistics.datatree.Instance(opts.host)
-	self.i18n   = luci.statistics.i18n.Instance( self )
+	self.colors = colors.Instance()
+	self.tree   = tree.Instance(opts.host)
+	self.i18n   = i18n.Instance( self )
 
 	-- rrdtool default args
 	self.args = {
@@ -87,7 +85,7 @@ function Graph._rrdtool( self, def, rrd )
 	fs.mkdirr( dir )
 
 	-- construct commandline
-	local cmdline = "rrdtool graph"
+	local cmdline = { "rrdtool", "graph" }
 
 	-- copy default arguments to def stack
 	for i, opt in ipairs(self.args) do
@@ -102,15 +100,11 @@ function Graph._rrdtool( self, def, rrd )
 			opt = opt:gsub( "{file}", rrd )
 		end
 
-		if opt:match("[^%w]") then
-			cmdline = cmdline .. " '" .. opt .. "'"
-		else
-			cmdline = cmdline .. " " .. opt
-		end
+		cmdline[#cmdline+1] = util.shellquote(opt)
 	end
 
 	-- execute rrdtool
-	local rrdtool = io.popen( cmdline )
+	local rrdtool = io.popen(table.concat(cmdline, " "))
 	rrdtool:close()
 end
 
@@ -140,7 +134,7 @@ function Graph._generic( self, opts, plugin, plugin_instance, dtype, index )
 	function __def(source)
 
 		local inst = source.sname
-		local rrd  = source.rrd
+		local rrd  = source.rrd:gsub(":", "\\:")
 		local ds   = source.ds
 
 		if not ds or ds:len() == 0 then ds = "value" end
@@ -278,7 +272,7 @@ function Graph._generic( self, opts, plugin, plugin_instance, dtype, index )
 
 		-- create line1 statement
 		_tif( _args, "LINE%d:%s_%s#%s:%s",
-			source.noarea and 2 or 1,
+			source.width or (source.noarea and 2 or 1),
 			source.sname, var, line_color, legend )
 	end
 

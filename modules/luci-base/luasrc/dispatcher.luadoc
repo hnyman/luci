@@ -22,7 +22,7 @@ Check whether a dispatch node shall be visible
 ]]
 
 ---[[
-Return a sorted table of visible childs within a given node
+Return a sorted table of visible children within a given node
 
 @class function
 @name node_childs
@@ -82,15 +82,6 @@ Build the index before if it does not exist yet.
 ]]
 
 ---[[
-Register a tree modifier.
-
-@class function
-@name modifier
-@param	func	Modifier function
-@param	order	Modifier order value (optional)
-]]
-
----[[
 Clone a node of the dispatching tree to another position.
 
 @class function
@@ -116,8 +107,8 @@ Create a new dispatching node and define common parameters.
 
 ---[[
 Fetch or create a dispatching node without setting the target module or
-
 enabling the node.
+
 @class function
 @name get
 @param	...		Virtual path
@@ -131,6 +122,15 @@ Fetch or create a new dispatching node.
 @name node
 @param	...		Virtual path
 @return			Dispatching tree node
+]]
+
+---[[
+Lookup node in dispatching tree.
+
+@class function
+@name lookup
+@param  ...		Virtual path
+@return Node object, canonical url or nil if the path was not found.
 ]]
 
 ---[[

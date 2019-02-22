@@ -5,7 +5,7 @@
 local map, section, net = ...
 local ifname = net:get_interface():name()
 local private_key, listen_port
-local metric, mtu, preshared_key
+local metric, mtu, preshared_key, description
 local peers, public_key, allowed_ips, endpoint, persistent_keepalive
 
 
@@ -31,7 +31,7 @@ listen_port = section:taboption(
   translate("Optional. UDP port used for outgoing and incoming packets.")
 )
 listen_port.datatype = "port"
-listen_port.placeholder = "51820"
+listen_port.placeholder = translate("random")
 listen_port.optional = true
 
 addresses = section:taboption(
@@ -52,7 +52,7 @@ metric = section:taboption(
   Value,
   "metric",
   translate("Metric"),
-  translate("Optional.")
+  translate("Optional")
 )
 metric.datatype = "uinteger"
 metric.placeholder = "0"
@@ -69,21 +69,6 @@ mtu = section:taboption(
 mtu.datatype = "range(1280,1420)"
 mtu.placeholder = "1420"
 mtu.optional = true
-
-
-preshared_key = section:taboption(
-  "advanced",
-  Value,
-  "preshared_key",
-  translate("Preshared Key"),
-  translate("Optional. Base64-encoded preshared key. " ..
-            "Adds in an additional layer of symmetric-key " ..
-            "cryptography for post-quantum resistance.")
-)
-preshared_key.password = true
-preshared_key.datatype = "and(base64,rangelength(44,44))"
-preshared_key.optional = true
-
 
 fwmark = section:taboption(
   "advanced",
@@ -104,11 +89,21 @@ peers = map:section(
   "wireguard_" .. ifname,
   translate("Peers"),
   translate("Further information about WireGuard interfaces and peers " ..
-            "at <a href=\"http://wireguard.io\">wireguard.io</a>.")
+            "at <a href=\"http://wireguard.com\">wireguard.com</a>.")
 )
 peers.template = "cbi/tsection"
 peers.anonymous = true
 peers.addremove = true
+
+
+description = peers:option(
+  Value,
+  "description",
+  translate("Description"),
+  translate("Optional. Description of peer."))
+description.placeholder = "My Peer"
+description.datatype = "string"
+description.optional = true
 
 
 public_key = peers:option(
@@ -119,6 +114,19 @@ public_key = peers:option(
 )
 public_key.datatype = "and(base64,rangelength(44,44))"
 public_key.optional = false
+
+
+preshared_key = peers:option(
+  Value,
+  "preshared_key",
+  translate("Preshared Key"),
+  translate("Optional. Base64-encoded preshared key. " ..
+            "Adds in an additional layer of symmetric-key " ..
+            "cryptography for post-quantum resistance.")
+)
+preshared_key.password = true
+preshared_key.datatype = "and(base64,rangelength(44,44))"
+preshared_key.optional = true
 
 
 allowed_ips = peers:option(

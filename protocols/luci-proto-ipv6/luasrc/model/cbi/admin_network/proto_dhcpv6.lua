@@ -14,7 +14,7 @@ o.default = "try"
 
 o = section:taboption("general", Value, "reqprefix",
 	translate("Request IPv6-prefix of length"))
-o:value("auto", translate("automatic"))
+o:value("auto", translate("Automatic"))
 o:value("no", translate("disabled"))
 o:value("48")
 o:value("52")
@@ -38,7 +38,7 @@ o.default = o.enabled
 
 o = section:taboption("advanced", Value, "ip6prefix",
 	translate("Custom delegated IPv6-prefix"))
-o.dataype = "ip6addr"
+o.dataype = "list(ip6addr)"
 
 
 o = section:taboption("advanced", DynamicList, "dns",

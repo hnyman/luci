@@ -2,13 +2,14 @@ module("luci.controller.splash.splash", package.seeall)
 
 local uci = luci.model.uci.cursor()
 local util = require "luci.util"
+local ipc = require "luci.ip"
 
 function index()
 	entry({"admin", "services", "splash"}, cbi("splash/splash"), _("Client-Splash"), 90)
 	entry({"admin", "services", "splash", "splashtext" }, form("splash/splashtext"), _("Splashtext"), 10)
 
 	local e
-	
+
 	e = node("splash")
 	e.target = call("action_dispatch")
 
@@ -24,30 +25,35 @@ function index()
 end
 
 function ip_to_mac(ip)
-	local ipc = require "luci.ip"
 	local i, n
-
-	for i, n in ipairs(ipc.neighbors()) do
-		if n.mac and n.dest and n.dest:equal(ip) then
-			return n.mac
-		end
+	for i, n in ipairs(ipc.neighbors({ dest = ip })) do
+		local mac = ipc.checkmac(n.mac)
+		if mac then return mac end
 	end
 end
 
 function action_dispatch()
 	local uci = luci.model.uci.cursor_state()
-	local mac = ip_to_mac(luci.http.getenv("REMOTE_ADDR")) or ""
+	local mac = ip_to_mac(luci.http.getenv("REMOTE_ADDR"))
 	local access = false
 
-	uci:foreach("luci_splash", "lease", function(s)
-		if s.mac and s.mac:lower() == mac then access = true end
-	end)
+	if mac then
+		uci:foreach("luci_splash", "lease", function(s)
+			if ipc.checkmac(s.mac) == mac then
+				access = true
+				return false
+			end
+		end)
 
-	uci:foreach("luci_splash", "whitelist", function(s)
-		if s.mac and s.mac:lower() == mac then access = true end
-	end)
+		uci:foreach("luci_splash", "whitelist", function(s)
+			if ipc.checkmac(s.mac) == mac then
+				access = true
+				return false
+			end
+		end)
+	end
 
-	if #mac > 0 and access then
+	if access then
 		luci.http.redirect(luci.dispatcher.build_url())
 	else
 		luci.http.redirect(luci.dispatcher.build_url("splash", "splash"))
@@ -56,33 +62,39 @@ end
 
 function blacklist()
 	leased_macs = { }
-	uci:foreach("luci_splash", "blacklist",
-	        function(s) leased_macs[s.mac:lower()] = true
+	uci:foreach("luci_splash", "blacklist", function(s)
+		local m = ipc.checkmac(s.mac)
+		if m then leased_macs[m] = true end
 	end)
 	return leased_macs
 end
 
 function action_activate()
 	local ipc = require "luci.ip"
-	local mac = ip_to_mac(luci.http.getenv("REMOTE_ADDR") or "127.0.0.1") or ""
+	local mac = ip_to_mac(luci.http.getenv("REMOTE_ADDR") or "127.0.0.1")
 	local uci_state = require "luci.model.uci".cursor_state()
 	local blacklisted = false
 	if mac and luci.http.formvalue("accept") then
-		uci:foreach("luci_splash", "blacklist",
-        	        function(s) if s.mac and s.mac:lower() == mac then blacklisted = true end
+		uci:foreach("luci_splash", "blacklist", function(s)
+			if ipc.checkmac(s.mac) == mac then
+				blacklisted = true
+				return false
+			end
 	        end)
-		if blacklisted then	
+
+		if blacklisted then
 			luci.http.redirect(luci.dispatcher.build_url("splash" ,"blocked"))
 		else
+			local id = tostring(mac):gsub(':', ''):lower()
 			local redirect_url = uci:get("luci_splash", "general", "redirect_url")
 			if not redirect_url then
-				redirect_url = uci_state:get("luci_splash_locations", mac:gsub(':', ''):lower(), "location")
+				redirect_url = uci_state:get("luci_splash_locations", id, "location")
 			end
 			if not redirect_url then
 				redirect_url = luci.model.uci.cursor():get("freifunk", "community", "homepage") or 'http://www.freifunk.net'
 			end
-			remove_redirect(mac:gsub(':', ''):lower())
-			os.execute("luci-splash lease "..mac.." >/dev/null 2>&1")
+			remove_redirect(id)
+			os.execute("luci-splash lease "..tostring(mac).." >/dev/null 2>&1")
 			luci.http.redirect(redirect_url)
 		end
 	else
@@ -94,13 +106,14 @@ function action_status_admin()
 	local uci = luci.model.uci.cursor_state()
 	local macs = luci.http.formvaluetable("save")
 
-	local changes = { 
+	local changes = {
 		whitelist = { },
 		blacklist = { },
 		lease     = { },
 		remove    = { }
 	}
 
+	local key, _
 	for key, _ in pairs(macs) do
 		local policy = luci.http.formvalue("policy.%s" % key)
 		local mac    = luci.http.protocol.urldecode(key)
@@ -116,22 +129,22 @@ function action_status_admin()
 
 	if #changes.whitelist > 0 then
 		os.execute("luci-splash whitelist %s >/dev/null"
-			% table.concat(changes.whitelist))
+			% util.shellquote(table.concat(changes.whitelist)))
 	end
 
 	if #changes.blacklist > 0 then
 		os.execute("luci-splash blacklist %s >/dev/null"
-			% table.concat(changes.blacklist))
+			% util.shellquote(table.concat(changes.blacklist)))
 	end
 
 	if #changes.lease > 0 then
 		os.execute("luci-splash lease %s >/dev/null"
-			% table.concat(changes.lease))
+			% util.shellquote(table.concat(changes.lease)))
 	end
 
 	if #changes.remove > 0 then
 		os.execute("luci-splash remove %s >/dev/null"
-			% table.concat(changes.remove))
+			% util.shellquote(table.concat(changes.remove)))
 	end
 
 	luci.template.render("admin_status/splash", { is_admin = true })
@@ -141,17 +154,17 @@ function action_status_public()
 	luci.template.render("admin_status/splash", { is_admin = false })
 end
 
-function remove_redirect(mac)
-	local mac = mac:lower()
-	mac = mac:gsub(":", "")
+function remove_redirect(id)
 	local uci = require "luci.model.uci".cursor_state()
 	local redirects = uci:get_all("luci_splash_locations")
 	--uci:load("luci_splash_locations")
 	uci:revert("luci_splash_locations")
+
 	-- For all redirects
+	local k, v
 	for k, v in pairs(redirects) do
 		if v[".type"] == "redirect" then
-			if v[".name"] ~= mac then
+			if v[".name"] ~= id then
 				-- Rewrite state
 				uci:section("luci_splash_locations", "redirect", v[".name"], {
 					location = v.location
@@ -159,5 +172,6 @@ function remove_redirect(mac)
 			end
 		end
 	end
+
 	uci:save("luci_splash_redirects")
 end

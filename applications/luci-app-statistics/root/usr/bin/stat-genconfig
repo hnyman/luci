@@ -117,6 +117,21 @@ function config_exec( c )
 	return str
 end
 
+function config_curl( c )
+	local str = ""
+
+	for s in pairs(sections) do
+		if sections[s][".type"] == "collectd_curl_page" then
+			str = str .. "\t<Page \"" .. sections[s].name .. "\">\n" ..
+						 "\t\tURL \"" .. sections[s].url .. "\"\n" ..
+						 "\t\tMeasureResponseTime true\n" ..
+						 "\t</Page>\n"
+		end
+	end
+
+	return str
+end
+
 function config_iptables( c )
 	local str = ""
 
@@ -255,6 +270,12 @@ end
 
 
 plugins = {
+	apcups = {
+		{ "Host", "Port" },
+		{ },
+		{ }
+	},
+
 	collectd = {
 		{ "BaseDir", "Include", "PIDFile", "PluginDir", "TypesDB", "Interval", "ReadThreads", "Hostname" },
 		{ },
@@ -279,11 +300,19 @@ plugins = {
 		{ }
 	},
 
+        contextswitch = {
+                { },
+                { },
+                { }
+        },
+
 	csv	= {
 		{ "DataDir" },
 		{ "StoreRates" },
 		{ }
 	},
+
+	curl = config_curl,
 
 	df	= {
 		{ },
@@ -455,8 +484,10 @@ preprocess = {
 
 section("collectd")
 
+section("logfile")
+
 for plugin in pairs(plugins) do
-	if plugin ~= "collectd" then
+	if (plugin ~= "collectd") and (plugin ~= "logfile") then
 		section( plugin )
 	end
 end

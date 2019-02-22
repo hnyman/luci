@@ -13,36 +13,46 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.0.6\n"
 
+#: applications/luci-app-hd-idle/luasrc/model/cbi/hd_idle.lua:15
 msgid "Disk"
 msgstr "Disque"
 
+#: applications/luci-app-hd-idle/luasrc/model/cbi/hd_idle.lua:13
 msgid "Enable"
 msgstr "Activer"
 
-msgid "Idle-time"
+#: applications/luci-app-hd-idle/luasrc/controller/hd_idle.lua:13
+#: applications/luci-app-hd-idle/luasrc/model/cbi/hd_idle.lua:6
+msgid "HDD Idle"
+msgstr "HDD Idle"
+
+#: applications/luci-app-hd-idle/luasrc/model/cbi/hd_idle.lua:7
+msgid ""
+"HDD Idle is a utility program for spinning-down external disks after a "
+"period of idle time."
+msgstr ""
+"HDD Idle est un utilitaire pour arrêter la rotation des disques externes "
+"après une période d'inactivité."
+
+#: applications/luci-app-hd-idle/luasrc/model/cbi/hd_idle.lua:21
+msgid "Idle time"
 msgstr "Temps d'inactivité"
 
-msgid "Idle-time unit"
+#: applications/luci-app-hd-idle/luasrc/model/cbi/hd_idle.lua:23
+msgid "Idle time unit"
 msgstr "Unité de temps"
 
+#: applications/luci-app-hd-idle/luasrc/model/cbi/hd_idle.lua:10
 msgid "Settings"
 msgstr "Réglages"
 
 # Hours
+#: applications/luci-app-hd-idle/luasrc/model/cbi/hd_idle.lua:26
 msgid "h"
 msgstr "h"
 
-msgid "hd-idle"
-msgstr "hd-idle"
-
-msgid ""
-"hd-idle is a utility program for spinning-down external disks after a period "
-"of idle time."
-msgstr ""
-"hd-idle est un utilitaire pour arrêter la rotation des disques externes "
-"après une période d'inactivité."
-
 # Minutes (not minimum)
+#: applications/luci-app-hd-idle/luasrc/model/cbi/hd_idle.lua:25
 msgid "min"
 msgstr "min"
 

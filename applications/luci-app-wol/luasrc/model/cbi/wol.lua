@@ -1,7 +1,9 @@
 -- Copyright 2010 Jo-Philipp Wich <jow@openwrt.org>
 -- Licensed to the public under the Apache License 2.0.
 
+local utl = require "luci.util"
 local sys = require "luci.sys"
+local ipc = require "luci.ip"
 local fs  = require "nixio.fs"
 
 m = SimpleForm("wol", translate("Wake on LAN"),
@@ -58,7 +60,8 @@ end
 
 function host.write(self, s, val)
 	local host = luci.http.formvalue("cbid.wol.1.mac")
-	if host and #host > 0 and host:match("^[a-fA-F0-9:]+$") then
+	local mac = ipc.checkmac(host)
+	if mac then
 		local cmd
 		local util = luci.http.formvalue("cbid.wol.1.binary") or (
 			has_ewk and "/usr/bin/etherwake" or "/usr/bin/wol"
@@ -67,16 +70,16 @@ function host.write(self, s, val)
 		if util == "/usr/bin/etherwake" then
 			local iface = luci.http.formvalue("cbid.wol.1.iface")
 			local broadcast = luci.http.formvalue("cbid.wol.1.broadcast")
-			cmd = "%s -D%s %s %q" %{
-				util, (iface ~= "" and " -i %q" % iface or ""),
-				(broadcast == "1" and " -b" or ""), host
+			cmd = "%s -D%s %s %q 2>&1" %{
+				util, (iface ~= "" and " -i %s" % utl.shellquote(iface) or ""),
+				(broadcast == "1" and " -b" or ""), mac
 			}
 		else
-			cmd = "%s -v %q" %{ util, host }
+			cmd = "%s -v %q" %{ util, mac }
 		end
 
 		local msg = "<p><strong>%s</strong><br /><br /><code>%s<br /><br />" %{
-			translate("Starting WoL utility:"), cmd
+			translate("Starting WoL utility:"), utl.pcdata(cmd)
 		}
 
 		local p = io.popen(cmd .. " 2>&1")

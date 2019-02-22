@@ -84,11 +84,11 @@ function action_json()
 	local jsonreq4
 	local jsonreq6
 
-	local v4_port = uci:get("olsrd", "olsrd_jsoninfo", "port") or 9090
-	local v6_port = uci:get("olsrd6", "olsrd_jsoninfo", "port") or 9090
+	local v4_port = tonumber(uci:get("olsrd", "olsrd_jsoninfo", "port") or "") or 9090
+	local v6_port = tonumber(uci:get("olsrd6", "olsrd_jsoninfo", "port") or "") or 9090
 
-	jsonreq4 = utl.exec("(echo /status | nc 127.0.0.1 " .. v4_port .. " | sed -n '/^[}{ ]/p') 2>/dev/null" )
-	jsonreq6 = utl.exec("(echo /status | nc ::1 " .. v6_port .. " | sed -n '/^[}{ ]/p') 2>/dev/null")
+	jsonreq4 = utl.exec("(echo /all | nc 127.0.0.1 %d | sed -n '/^[}{ ]/p') 2>/dev/null" % v4_port)
+	jsonreq6 = utl.exec("(echo /all | nc ::1 %d | sed -n '/^[}{ ]/p') 2>/dev/null" % v6_port)
 	http.prepare_content("application/json")
 	if not jsonreq4 or jsonreq4 == "" then
 		jsonreq4 = "{}"
@@ -101,41 +101,19 @@ end
 
 
 local function local_mac_lookup(ipaddr)
-	local _, ifa, dev
-
-	ipaddr = tostring(ipaddr)
-
-	if not ifaddr_table then
-		ifaddr_table = nixio.getifaddrs()
-	end
-
-	-- ipaddr -> ifname
-	for _, ifa in ipairs(ifaddr_table) do
-		if ifa.addr == ipaddr then
-			dev = ifa.name
-			break
-		end
-	end
-
-	-- ifname -> macaddr
-	for _, ifa in ipairs(ifaddr_table) do
-		if ifa.name == dev and ifa.family == "packet" then
-			return ifa.addr
-		end
+	local _, rt
+	for _, rt in ipairs(luci.ip.routes({ type = 1, src = ipaddr })) do
+		local link = rt.dev and luci.ip.link(rt.dev)
+		local mac = link and luci.ip.checkmac(link.mac)
+		if mac then return mac end
 	end
 end
 
 local function remote_mac_lookup(ipaddr)
 	local _, n
-
-	if not neigh_table then
-		neigh_table = luci.ip.neighbors()
-	end
-
-	for _, n in ipairs(neigh_table) do
-		if n.mac and n.dest and n.dest:equal(ipaddr) then
-			return n.mac
-		end
+	for _, n in ipairs(luci.ip.neighbors({ dest = ipaddr })) do
+		local mac = luci.ip.checkmac(n.mac)
+		if mac then return mac end
 	end
 end
 
@@ -172,7 +150,7 @@ function action_neigh(json)
 	for _, dev in ipairs(devices) do
 		for _, net in ipairs(dev:get_wifinets()) do
 			local radio = net:get_device()
-			assoclist[#assoclist+1] = {} 
+			assoclist[#assoclist+1] = {}
 			assoclist[#assoclist]['ifname'] = net:ifname()
 			assoclist[#assoclist]['network'] = net:network()[1]
 			assoclist[#assoclist]['device'] = radio and radio:name() or nil
@@ -187,7 +165,7 @@ function action_neigh(json)
 		local mac = ""
 		local ip
 		local neihgt = {}
-		
+
 		if resolve == "1" then
 			hostname = nixio.getnameinfo(v.remoteIP, nil, 100)
 			if hostname then
@@ -201,9 +179,9 @@ function action_neigh(json)
 
 		for _, val in ipairs(assoclist) do
 			if val.network == interface and val.list then
+				local assocmac, assot
 				for assocmac, assot in pairs(val.list) do
-					assocmac = string.lower(assocmac or "")
-					if rmac == assocmac then
+					if rmac == luci.ip.checkmac(assocmac) then
 						signal = tonumber(assot.signal)
 						noise = tonumber(assot.noise)
 						snr = (noise*-1) - (signal*-1)
@@ -322,7 +300,7 @@ function action_mid()
 
 	local function compare(a,b)
 		if a.proto == b.proto then
-			return a.ipAddress < b.ipAddress
+			return a.main.ipAddress < b.main.ipAddress
 		else
 			return a.proto < b.proto
 		end
@@ -340,24 +318,34 @@ function action_smartgw()
 
 	local function compare(a,b)
 		if a.proto == b.proto then
-			return a.tcPathCost < b.tcPathCost
+			return a.cost < b.cost
 		else
 			return a.proto < b.proto
 		end
 	end
 
-	table.sort(data, compare)
+	table.sort(data.ipv4, compare)
+	table.sort(data.ipv6, compare)
 	luci.template.render("status-olsr/smartgw", {gws=data, has_v4=has_v4, has_v6=has_v6})
 end
 
 function action_interfaces()
 	local data, has_v4, has_v6, error = fetch_jsoninfo('interfaces')
+	local ntm = require "luci.model.network".init()
+
 	if error then
 		return
 	end
 
 	local function compare(a,b)
 		return a.proto < b.proto
+	end
+
+	for k, v in ipairs(data) do
+		local interface = ntm:get_status_by_address(v.olsrInterface.ipAddress)
+		if interface then
+			v.interface = interface
+		end
 	end
 
 	table.sort(data, compare)
@@ -372,11 +360,11 @@ function fetch_jsoninfo(otable)
 	local IpVersion = uci:get_first("olsrd", "olsrd","IpVersion")
 	local jsonreq4 = ""
 	local jsonreq6 = ""
-	local v4_port = uci:get("olsrd", "olsrd_jsoninfo", "port") or 9090
-	local v6_port = uci:get("olsrd6", "olsrd_jsoninfo", "port") or 9090
+	local v4_port = tonumber(uci:get("olsrd", "olsrd_jsoninfo", "port") or "") or 9090
+	local v6_port = tonumber(uci:get("olsrd6", "olsrd_jsoninfo", "port") or "") or 9090
 
-	jsonreq4 = utl.exec("(echo /" .. otable .. " | nc 127.0.0.1 " .. v4_port .. " | sed -n '/^[}{ ]/p') 2>/dev/null")
-	jsonreq6 = utl.exec("(echo /" .. otable .. " | nc ::1 " .. v6_port .. " | sed -n '/^[}{ ]/p') 2>/dev/null")
+	jsonreq4 = utl.exec("(echo /%s | nc 127.0.0.1 %d | sed -n '/^[}{ ]/p') 2>/dev/null" %{ otable, v4_port })
+	jsonreq6 = utl.exec("(echo /%s | nc ::1 %d | sed -n '/^[}{ ]/p') 2>/dev/null" %{ otable, v6_port })
 	local jsondata4 = {}
 	local jsondata6 = {}
 	local data4 = {}

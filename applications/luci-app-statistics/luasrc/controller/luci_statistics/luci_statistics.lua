@@ -10,7 +10,7 @@ function index()
 	require("luci.util")
 	require("luci.statistics.datatree")
 
-	-- override entry(): check for existance <plugin>.so where <plugin> is derived from the called path
+	-- override entry(): check for existence <plugin>.so where <plugin> is derived from the called path
 	function _entry( path, ... )
 		local file = path[5] or path[4]
 		if nixio.fs.access( "/usr/lib/collectd/" .. file .. ".so" ) then
@@ -23,10 +23,13 @@ function index()
 		s_general	= _("General plugins"),
 		s_network	= _("Network plugins"),
 
+		apcups		= _("APC UPS"),
 		conntrack	= _("Conntrack"),
+		contextswitch	= _("Context Switches"),
 		cpu			= _("Processor"),
 		cpufreq		= _("CPU Frequency"),
 		csv			= _("CSV Output"),
+		curl		= _("cUrl"),
 		df			= _("Disk Space Usage"),
 		disk		= _("Disk Usage"),
 		dns			= _("DNS"),
@@ -58,10 +61,10 @@ function index()
 	-- our collectd menu
 	local collectd_menu = {
 		output  = { "csv", "network", "rrdtool", "unixsock" },
-		general = { "cpu", "cpufreq", "df", "disk", "email",
-			"entropy", "exec", "irq", "load", "memory",
+		general = { "apcups", "contextswitch", "cpu", "cpufreq", "df",
+			"disk", "email", "entropy", "exec", "irq", "load", "memory",
 			"nut", "processes", "sensors", "thermal", "uptime" },
-		network = { "conntrack", "dns", "interface", "iptables",
+		network = { "conntrack", "curl", "dns", "interface", "iptables",
 			"netlink", "olsrd", "openvpn", "ping",
 			"splash_leases", "tcpconns", "iwinfo" }
 	}
@@ -87,7 +90,7 @@ function index()
 			_entry(
 				{ "admin", "statistics", "collectd", section, plugin },
 				cbi("luci_statistics/" .. plugin ),
-				labels[plugin], j * 10
+				labels[plugin] or plugin, j * 10
 			)
 		end
 

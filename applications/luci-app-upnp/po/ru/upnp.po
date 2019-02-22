@@ -1,132 +1,185 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LuCI: upnp\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-19 19:36+0200\n"
-"PO-Revision-Date: 2012-08-15 15:20+0300\n"
-"Last-Translator: Roman A. aka BasicXP <x12ozmouse@ya.ru>\n"
-"Language-Team: Russian <x12ozmouse@ya.ru>\n"
-"Language: ru\n"
-"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: LuCI: upnp\n"
+"POT-Creation-Date: 2009-05-19 19:36+0200\n"
+"PO-Revision-Date: 2018-01-18 23:42+0300\n"
+"Language-Team: http://cyber-place.ru\n"
+"MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Pootle 2.0.6\n"
-"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Last-Translator: Olimjon aka Kobin23 <olimko98@gmail.com>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: ru\n"
+"Project-Info: Это технический перевод, не дословный. Главное-удобный русский "
+"интерфейс, все проверялось в графическом режиме, совместим с другими apps\n"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:81
 msgid ""
 "ACLs specify which external ports may be redirected to which internal "
 "addresses and ports"
 msgstr ""
-"Список доступа определяет, какие внешние порты могут быть перенаправлены на "
-"внутренние адреса и порты"
+"Список доступа задает внешние порты для перенаправления на внутренние адреса "
+"и порты."
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:102
 msgid "Action"
 msgstr "Действие"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:39
 msgid "Active UPnP Redirects"
 msgstr "Активные UPnP-переадресации"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:13
 msgid "Advanced Settings"
-msgstr "Расширенные настройки"
+msgstr "Дополнительные настройки"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:39
+msgid "Advertise as IGDv1 device instead of IGDv2"
+msgstr "Объявить как IGDv1 устройство вместо IGDv2"
+
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:36
 msgid "Allow adding forwards only to requesting ip addresses"
-msgstr "Разрешить перенаправление только для запрашивающих IP-адресов"
+msgstr "Разрешить перенаправление только для запрашивающих IP-адресов."
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:59
 msgid "Announced model number"
-msgstr "Номер модели"
+msgstr "Объявить номер модели"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:58
 msgid "Announced serial number"
-msgstr "Серийный номер"
+msgstr "Объявить серийный номер"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:69
 msgid "Clean rules interval"
 msgstr "Интервал очистки правил"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:65
 msgid "Clean rules threshold"
 msgstr "Порог очистки правил"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:44
 msgid "Client Address"
 msgstr "Адрес клиента"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:46
 msgid "Client Port"
 msgstr "Порт клиента"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:51
 msgid "Collecting data..."
 msgstr "Сбор данных..."
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:88
 msgid "Comment"
 msgstr "Комментарий"
 
-msgid "Delete Redirect"
-msgstr "Удалить переадресацию"
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:29
+msgid "Delete"
+msgstr "Удалить"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:47
+msgid "Description"
+msgstr "Описание"
+
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:57
 msgid "Device UUID"
 msgstr "UUID устройства"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:44
 msgid "Downlink"
-msgstr "Нисходящий канал"
+msgstr "Внутреннее соединение"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:38
+msgid "Enable IGDv1 mode"
+msgstr "IGDv1 режим"
+
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:33
 msgid "Enable NAT-PMP functionality"
 msgstr "Включить NAT-PMP"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:32
 msgid "Enable UPnP functionality"
 msgstr "Включить UPnP"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:41
 msgid "Enable additional logging"
-msgstr "Включить дополнительное журналирование"
+msgstr "Дополнительное журналирование"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:35
 msgid "Enable secure mode"
-msgstr "Использовать защищённый режим"
+msgstr "Защищённый режим"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:43
 msgid "External Port"
 msgstr "Внешний порт"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:90
 msgid "External ports"
 msgstr "Внешние порты"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:12
 msgid "General Settings"
-msgstr "Общие настройки"
+msgstr "Основные настройки"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:45
+msgid "Host"
+msgstr "Хост"
+
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:94
 msgid "Internal addresses"
 msgstr "Внутренние адреса"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:98
 msgid "Internal ports"
 msgstr "Внутренние порты"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:80
 msgid "MiniUPnP ACLs"
 msgstr "Список доступа MiniUPnP"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:10
 msgid "MiniUPnP settings"
 msgstr "Настройки MiniUPnP"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:61
 msgid "Notify interval"
 msgstr "Интервал уведомления"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:50
 msgid "Port"
 msgstr "Порт"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:73
 msgid "Presentation URL"
-msgstr "URL представления"
+msgstr "Задать URL-адрес"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:42
 msgid "Protocol"
 msgstr "Протокол"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:42
 msgid "Puts extra debugging information into the system log"
-msgstr "Добавлять дополнительную отладочную информацию в системный журнал"
+msgstr "Добавлять дополнительную отладочную информацию в системный журнал."
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:55
 msgid "Report system instead of daemon uptime"
-msgstr "Сообщать время работы системы вместо сервиса"
+msgstr "Сообщать время работы системы вместо службы"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:15
 msgid "Start UPnP and NAT-PMP service"
-msgstr "Запустить службы UPnP и NAT-PMP"
+msgstr "Запустить службы<br />UPnP и NAT-PMP"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:32
 msgid "There are no active redirects."
 msgstr "Активные переадресации отсутствуют."
 
+#: applications/luci-app-upnp/luasrc/controller/upnp.lua:14
 msgid "UPnP"
 msgstr "UPnP"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:6
 msgid ""
 "UPnP allows clients in the local network to automatically configure the "
 "router."
@@ -134,25 +187,23 @@ msgstr ""
 "UPnP позволяет клиентам в локальной сети автоматически настраивать "
 "маршрутизатор."
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:76
 msgid "UPnP lease file"
 msgstr "Файл аренды UPnP"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:5
 msgid "Universal Plug & Play"
 msgstr "Universal Plug & Play"
 
+#: applications/luci-app-upnp/luasrc/view/upnp_status.htm:26
+msgid "Unknown"
+msgstr ""
+
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:47
 msgid "Uplink"
-msgstr "Восходящий канал"
+msgstr "Внешнее соединение"
 
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:45
+#: applications/luci-app-upnp/luasrc/model/cbi/upnp/upnp.lua:48
 msgid "Value in KByte/s, informational only"
-msgstr "Значение в КБ/с, только для информации"
-
-# Used in upnpmini.lua, which is marked broken, thus can be removed
-#~ msgid ""
-#~ "UPNP allows clients in the local network to automatically configure the "
-#~ "router."
-#~ msgstr ""
-#~ "UPnP позволяет клиентам в локальной сети автоматически настраивать "
-#~ "маршрутизатор."
-
-#~ msgid "enable"
-#~ msgstr "включить"
+msgstr "Значение в КБ/с, только для информации."
