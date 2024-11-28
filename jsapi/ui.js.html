@@ -925,6 +925,8 @@
             
                 <li data-name="LuCI.form.GridSection#anonymous"><a href="LuCI.form.GridSection.html#anonymous">anonymous</a></li>
             
+                <li data-name="LuCI.form.GridSection#cloneable"><a href="LuCI.form.GridSection.html#cloneable">cloneable</a></li>
+            
                 <li data-name="LuCI.form.GridSection#extedit"><a href="LuCI.form.GridSection.html#extedit">extedit</a></li>
             
                 <li data-name="LuCI.form.GridSection#max_cols"><a href="LuCI.form.GridSection.html#max_cols">max_cols</a></li>
@@ -1675,6 +1677,8 @@
             
                 <li data-name="LuCI.form.TableSection#anonymous"><a href="LuCI.form.TableSection.html#anonymous">anonymous</a></li>
             
+                <li data-name="LuCI.form.TableSection#cloneable"><a href="LuCI.form.TableSection.html#cloneable">cloneable</a></li>
+            
                 <li data-name="LuCI.form.TableSection#parentoption"><a href="LuCI.form.TableSection.html#parentoption">parentoption</a></li>
             
                 <li data-name="LuCI.form.TableSection#tabbed"><a href="LuCI.form.TableSection.html#tabbed">tabbed</a></li>
@@ -1838,6 +1842,8 @@
                 <li data-name="LuCI.form.TypedSection##addremove"><a href="LuCI.form.TypedSection.html#addremove">addremove</a></li>
             
                 <li data-name="LuCI.form.TypedSection##anonymous"><a href="LuCI.form.TypedSection.html#anonymous">anonymous</a></li>
+            
+                <li data-name="LuCI.form.TypedSection##cloneable"><a href="LuCI.form.TypedSection.html#cloneable">cloneable</a></li>
             
                 <li data-name="LuCI.form.TypedSection##tabbed"><a href="LuCI.form.TypedSection.html#tabbed">tabbed</a></li>
             
@@ -2805,6 +2811,8 @@
                 <li data-name="LuCI.uci#apply"><a href="LuCI.uci.html#apply">apply</a></li>
             
                 <li data-name="LuCI.uci#changes"><a href="LuCI.uci.html#changes">changes</a></li>
+            
+                <li data-name="LuCI.uci#clone"><a href="LuCI.uci.html#clone">clone</a></li>
             
                 <li data-name="LuCI.uci#createSID"><a href="LuCI.uci.html#createSID">createSID</a></li>
             
@@ -5895,7 +5903,96 @@ var UIDynamicList = UIElement.extend(/** @lends LuCI.ui.DynamicList.prototype */
 			this.addItem(dl, this.values[i], label);
 		}
 
+		this.initDragAndDrop(dl);
+
 		return this.bind(dl);
+	},
+
+	/** @private */
+	initDragAndDrop: function(dl) {
+		let draggedItem = null;
+		let placeholder = null;
+
+		dl.addEventListener('dragstart', (e) => {
+			if (e.target.classList.contains('item')) {
+				draggedItem = e.target;
+				e.target.classList.add('dragging');
+			}
+		});
+
+		dl.addEventListener('dragend', (e) => e.target.classList.remove('dragging'));
+
+		dl.addEventListener('dragover', (e) => e.preventDefault());
+
+		dl.addEventListener('dragenter', (e) => e.target.classList.add('drag-over'));
+
+		dl.addEventListener('dragleave', (e) => e.target.classList.remove('drag-over'));
+
+		dl.addEventListener('drop', (e) => {
+			e.preventDefault();
+			e.target.classList.remove('drag-over');
+			const target = e.target.classList.contains('item') ? e.target : dl.querySelector('.add-item');
+			dl.insertBefore(draggedItem, target);
+		});
+
+		dl.addEventListener('click', (e) => {
+			if (e.target.closest('.item')) {
+				const span = e.target.closest('.item').querySelector('SPAN');
+				if (span) {
+					const range = document.createRange();
+					range.selectNodeContents(span);
+					const selection = window.getSelection();
+					if (selection.rangeCount === 0 || selection.toString().length === 0) {
+						selection.removeAllRanges();
+						selection.addRange(range);
+					} else selection.removeAllRanges();
+				}
+			}
+		});
+
+		dl.addEventListener('touchstart', (e) => {
+			const touch = e.touches[0];
+			const target = e.target.closest('.item');
+			if (target) {
+				draggedItem = target;
+
+				placeholder = draggedItem.cloneNode(true);
+				placeholder.className = 'placeholder';
+				placeholder.style.height = `${draggedItem.offsetHeight}px`;
+				draggedItem.parentNode.insertBefore(placeholder, draggedItem.nextSibling);
+				draggedItem.classList.add('dragging')
+			}
+		});
+
+		dl.addEventListener('touchmove', (e) => {
+			if (draggedItem) {
+				const touch = e.touches[0];
+				const currentY = touch.clientY;
+
+				const items = Array.from(dl.querySelectorAll('.item'));
+				const target = items.find(item => {
+					const rect = item.getBoundingClientRect();
+					return currentY > rect.top &amp;&amp; currentY &lt; rect.bottom;
+				});
+
+				if (target &amp;&amp; target !== draggedItem) {
+					const insertBefore = currentY &lt; target.getBoundingClientRect().top + target.offsetHeight / 2;
+					dl.insertBefore(placeholder, insertBefore ? target : target.nextSibling);
+				}
+
+				e.preventDefault();
+			}
+		});
+
+		dl.addEventListener('touchend', (e) => {
+			if (draggedItem &amp;&amp; placeholder) {
+				dl.insertBefore(draggedItem, placeholder);
+				draggedItem.classList.remove('dragging')
+				placeholder.parentNode.removeChild(placeholder);
+				placeholder = null;
+				draggedItem = null;
+			}
+		});
 	},
 
 	/** @private */
@@ -5917,7 +6014,7 @@ var UIDynamicList = UIElement.extend(/** @lends LuCI.ui.DynamicList.prototype */
 	/** @private */
 	addItem: function(dl, value, text, flash) {
 		var exists = false,
-		    new_item = E('div', { 'class': flash ? 'item flash' : 'item', 'tabindex': 0 }, [
+		    new_item = E('div', { 'class': flash ? 'item flash' : 'item', 'tabindex': 0, 'draggable': true }, [
 				E('span', {}, [ text || value ]),
 				E('input', {
 					'type': 'hidden',
@@ -5989,7 +6086,17 @@ var UIDynamicList = UIElement.extend(/** @lends LuCI.ui.DynamicList.prototype */
 			return;
 
 		if (item) {
-			this.removeItem(dl, item);
+			// Get bounding rectangle of the item
+			var rect = item.getBoundingClientRect();
+
+			// Get computed styles for the ::after pseudo-element
+			var afterStyles = window.getComputedStyle(item, '::after');
+			var afterWidth = parseFloat(afterStyles.width) || 0;
+
+			// Check if the click is within the ::after region
+			if (rect.right - ev.clientX &lt;= afterWidth) {
+				this.removeItem(dl, item);
+			}
 		}
 		else if (matchesElem(ev.target, '.cbi-button-add')) {
 			var input = ev.target.previousElementSibling;
@@ -8655,7 +8762,7 @@ return UI;
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sat Nov 23 2024 07:55:27 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Nov 28 2024 18:34:09 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
