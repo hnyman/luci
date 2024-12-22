@@ -86,6 +86,8 @@
             
                 <li data-name="LuCI#hasViewPermission"><a href="LuCI.html#hasViewPermission">hasViewPermission</a></li>
             
+                <li data-name="LuCI#isArguments"><a href="LuCI.html#isArguments">isArguments</a></li>
+            
                 <li data-name="LuCI#isObject"><a href="LuCI.html#isObject">isObject</a></li>
             
                 <li data-name="LuCI#location"><a href="LuCI.html#location">location</a></li>
@@ -4179,7 +4181,7 @@ to request the <code>LuCI.view</code> class.</p>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2393">line 2393</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2342">line 2342</a>
         </div>
         
     </div>
@@ -4391,7 +4393,7 @@ as parameters.</p></td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2352">line 2352</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2301">line 2301</a>
         </div>
         
     </div>
@@ -4630,7 +4632,7 @@ argument or copied from the given error instance.</p>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2773">line 2773</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2715">line 2715</a>
         </div>
         
     </div>
@@ -4785,7 +4787,7 @@ document root.</p>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3114">line 3114</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3074">line 3074</a>
         </div>
         
     </div>
@@ -4997,7 +4999,7 @@ callback function. The function is a wrapper around
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3252">line 3252</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3209">line 3209</a>
         </div>
         
     </div>
@@ -5100,7 +5102,7 @@ when it didn't run to begin with.</td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2651">line 2651</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2597">line 2597</a>
         </div>
         
     </div>
@@ -5293,7 +5295,7 @@ has no sub-features.</td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3218">line 3218</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3175">line 3175</a>
         </div>
         
     </div>
@@ -5392,6 +5394,159 @@ group is granted with write permissions.</td>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="isArguments">
+            
+            isArguments<span class="signature">(<span class="optional">val</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{boolean}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2885">line 2885</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Tests whether the passed argument is a function arguments object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>val</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>The value to test</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        boolean
+                        
+                    
+            </td>
+            <td class="description last">Returns <code>true</code> if the given value is a function arguments object,
+else returns <code>false</code>.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="isObject">
             
             isObject<span class="signature">(<span class="optional">val</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{boolean}</span>
@@ -5399,7 +5554,7 @@ group is granted with write permissions.</td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2919">line 2919</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2868">line 2868</a>
         </div>
         
     </div>
@@ -5554,7 +5709,7 @@ not <code>null</code>, else returns <code>false</code>.</td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2899">line 2899</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2848">line 2848</a>
         </div>
         
     </div>
@@ -5654,7 +5809,7 @@ not <code>null</code>, else returns <code>false</code>.</td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2886">line 2886</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2835">line 2835</a>
         </div>
         
     </div>
@@ -5667,9 +5822,11 @@ not <code>null</code>, else returns <code>false</code>.</td>
     <div class="description">
         <p>Construct a URL path relative to the media resource path of the
 LuCI ui (usually <code>/luci-static/$theme_name</code>).</p>
-<p>The resulting URL is guaranteed to only contain the characters
+<p>The resulting URL is guaranteed to contain only the characters
 <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>_</code>, <code>.</code>, <code>%</code>, <code>,</code>, <code>;</code>, and <code>-</code> as well
-as <code>/</code> for the path separator.</p>
+as <code>/</code> for the path separator. Suffixing '?x=y&amp;foo=bar' URI
+parameters also limited to the aforementioned characters is
+permissible.</p>
     </div>
     
 
@@ -5811,7 +5968,7 @@ slashes and any of the other characters mentioned above.</p></td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2811">line 2811</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2754">line 2754</a>
         </div>
         
     </div>
@@ -5823,9 +5980,11 @@ slashes and any of the other characters mentioned above.</p></td>
     
     <div class="description">
         <p>Construct a relative URL path from the given prefix and parts.
-The resulting URL is guaranteed to only contain the characters
+The resulting URL is guaranteed to contain only the characters
 <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>_</code>, <code>.</code>, <code>%</code>, <code>,</code>, <code>;</code>, and <code>-</code> as well
-as <code>/</code> for the path separator.</p>
+as <code>/</code> for the path separator. Suffixing '?x=y&amp;foo=bar' URI
+parameters also limited to the aforementioned characters is
+permissible.</p>
     </div>
     
 
@@ -5998,7 +6157,7 @@ slashes and any of the other characters mentioned above.</p></td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3184">line 3184</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3144">line 3144</a>
         </div>
         
     </div>
@@ -6303,7 +6462,7 @@ polling request.</td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3142">line 3142</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3102">line 3102</a>
         </div>
         
     </div>
@@ -6518,7 +6677,7 @@ by default.</p>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2286">line 2286</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2235">line 2235</a>
         </div>
         
     </div>
@@ -6757,7 +6916,7 @@ argument or copied from the given error instance.</p>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2432">line 2432</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2381">line 2381</a>
         </div>
         
     </div>
@@ -7015,7 +7174,7 @@ class instance.</p>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3069">line 3069</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3029">line 3029</a>
         </div>
         
     </div>
@@ -7186,7 +7345,7 @@ to the given default value on error.</td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2864">line 2864</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2811">line 2811</a>
         </div>
         
     </div>
@@ -7199,9 +7358,11 @@ to the given default value on error.</td>
     <div class="description">
         <p>Construct a URL path relative to the global static resource path
 of the LuCI ui (usually <code>/luci-static/resources</code>).</p>
-<p>The resulting URL is guaranteed to only contain the characters
+<p>The resulting URL is guaranteed to contain only the characters
 <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>_</code>, <code>.</code>, <code>%</code>, <code>,</code>, <code>;</code>, and <code>-</code> as well
-as <code>/</code> for the path separator.</p>
+as <code>/</code> for the path separator. Suffixing '?x=y&amp;foo=bar' URI
+parameters also limited to the aforementioned characters is
+permissible.</p>
     </div>
     
 
@@ -7343,7 +7504,7 @@ slashes and any of the other characters mentioned above.</p></td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3265">line 3265</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3222">line 3222</a>
         </div>
         
     </div>
@@ -7446,7 +7607,7 @@ when it was already running.</td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3014">line 3014</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2974">line 2974</a>
         </div>
         
     </div>
@@ -7603,7 +7764,7 @@ and the sorting is performed in-place.</p>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2948">line 2948</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2914">line 2914</a>
         </div>
         
     </div>
@@ -7826,7 +7987,7 @@ addresses or numeric values respectively.</p></td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3239">line 3239</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3196">line 3196</a>
         </div>
         
     </div>
@@ -7974,7 +8135,7 @@ it could not be found.</td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3035">line 3035</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2995">line 2995</a>
         </div>
         
     </div>
@@ -8124,7 +8285,7 @@ space and returned as array.</p>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2842">line 2842</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line2787">line 2787</a>
         </div>
         
     </div>
@@ -8137,9 +8298,11 @@ space and returned as array.</p>
     <div class="description">
         <p>Construct a URL with path relative to the script path of the server
 side LuCI application (usually <code>/cgi-bin/luci</code>).</p>
-<p>The resulting URL is guaranteed to only contain the characters
+<p>The resulting URL is guaranteed to contain only the characters
 <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>_</code>, <code>.</code>, <code>%</code>, <code>,</code>, <code>;</code>, and <code>-</code> as well
-as <code>/</code> for the path separator.</p>
+as <code>/</code> for the path separator. Suffixing '?x=y&amp;foo=bar' URI
+parameters also limited to the aforementioned characters is
+permissible.</p>
     </div>
     
 
@@ -8287,7 +8450,7 @@ slashes and any of the other characters mentioned above.</p></td>
     
         
         <div class="tag-source">
-            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3073">line 3073</a>
+            <a href="luci.js.html">luci.js</a>, <a href="luci.js.html#line3033">line 3033</a>
         </div>
         
     </div>
@@ -8458,7 +8621,7 @@ else <code>null</code>.</p></td>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Dec 19 2024 18:41:41 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Dec 22 2024 19:11:20 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
