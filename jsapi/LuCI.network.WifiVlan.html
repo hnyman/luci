@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: WifiDevice</title>
+    <title>Class: WifiVlan</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -3671,7 +3671,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="LuCI.network.WifiDevice.html">Class: WifiDevice</h1>
+        <h1 class="page-title" data-filename="LuCI.network.WifiVlan.html">Class: WifiVlan</h1>
         
 
 
@@ -3682,12 +3682,10 @@
     <h2>
         <span class="ancestors"><a href="LuCI.html">LuCI</a><a href="LuCI.network.html">.network</a>.</span>
     
-    WifiDevice
+    WifiVlan
     </h2>
     
-        <div class="class-description"><p>A <code>Network.WifiDevice</code> class instance represents a wireless radio device
-present on the system and provides wireless capability information as
-well as methods for enumerating related wireless networks.</p></div>
+        <div class="class-description"><p>A <code>Network.WifiVlan</code> class instance represents a vlan on a WifiNetwork.</p></div>
     
 </header>  
 
@@ -3699,14 +3697,14 @@ well as methods for enumerating related wireless networks.</p></div>
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="WifiDevice">
+        <h4 class="name" id="WifiVlan">
             
-            new LuCI.network.WifiDevice<span class="signature">()</span>
+            new LuCI.network.WifiVlan<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3298">line 3298</a>
+            <a href="network.js.html">network.js</a>, <a href="network.js.html#line4473">line 4473</a>
         </div>
         
     </div>
@@ -3784,697 +3782,6 @@ well as methods for enumerating related wireless networks.</p></div>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="addWifiNetwork">
-            
-            addWifiNetwork<span class="signature">(<span class="optional">options</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Promise.&lt;(null|<a href="LuCI.network.WifiNetwork.html">LuCI.network.WifiNetwork</a>)>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3570">line 3570</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Adds a new wireless network associated with this radio device to the
-configuration and sets its options to the provided values.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object.&lt;string, (string|Array.&lt;string>)></span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>The options to set for the newly added wireless network.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Promise.&lt;(null|<a href="LuCI.network.WifiNetwork.html">LuCI.network.WifiNetwork</a>)>
-                        
-                    
-            </td>
-            <td class="description last">Returns a promise resolving to a <code>WifiNetwork</code> instance describing
-the newly added wireless network or <code>null</code> if the given options
-were invalid.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="deleteWifiNetwork">
-            
-            deleteWifiNetwork<span class="signature">(network)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Promise.&lt;boolean>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3595">line 3595</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Deletes the wireless network with the given name associated with this
-radio device.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>network</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>The name of the wireless network to look up. This may be either an uci
-configuration section ID, a network ID in the form <code>radio#.network#</code>
-or a Linux network device name like <code>wlan0</code> which is resolved to the
-corresponding configuration section through <code>ubus</code> runtime information.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Promise.&lt;boolean>
-                        
-                    
-            </td>
-            <td class="description last">Returns a promise resolving to <code>true</code> when the wireless network was
-successfully deleted from the configuration or <code>false</code> when the given
-network could not be found or if the found network was not associated
-with this wireless radio device.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="get">
-            
-            get<span class="signature">(opt)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{null|string|Array.&lt;string>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3338">line 3338</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Read the given UCI option value of this wireless device.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>opt</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>The UCI option name to read.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        null
-                         | 
-                    
-                        string
-                         | 
-                    
-                        Array.&lt;string>
-                        
-                    
-            </td>
-            <td class="description last">Returns the UCI option value or <code>null</code> if the requested option is
-not found.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getHTModes">
-            
-            getHTModes<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3427">line 3427</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Gets a list of supported htmodes.</p>
-<p>The htmode values describe the wide-frequency options supported by
-the wireless phy.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Array.&lt;string>
-                        
-                    
-            </td>
-            <td class="description last">Returns an array of valid htmode values for this radio. Currently
-known mode values are:
-<ul>
-<li><code>HT20</code> - applicable to IEEE 802.11n, 20 MHz wide channels</li>
-<li><code>HT40</code> - applicable to IEEE 802.11n, 40 MHz wide channels</li>
-<li><code>VHT20</code> - applicable to IEEE 802.11ac, 20 MHz wide channels</li>
-<li><code>VHT40</code> - applicable to IEEE 802.11ac, 40 MHz wide channels</li>
-<li><code>VHT80</code> - applicable to IEEE 802.11ac, 80 MHz wide channels</li>
-<li><code>VHT160</code> - applicable to IEEE 802.11ac, 160 MHz wide channels</li>
-<li><code>HE20</code> - applicable to IEEE 802.11ax, 20 MHz wide channels</li>
-<li><code>HE40</code> - applicable to IEEE 802.11ax, 40 MHz wide channels</li>
-<li><code>HE80</code> - applicable to IEEE 802.11ax, 80 MHz wide channels</li>
-<li><code>HE160</code> - applicable to IEEE 802.11ax, 160 MHz wide channels</li>
-<li><code>EHT20</code> - applicable to IEEE 802.11be, 20 MHz wide channels</li>
-<li><code>EHT40</code> - applicable to IEEE 802.11be, 40 MHz wide channels</li>
-<li><code>EHT80</code> - applicable to IEEE 802.11be, 80 MHz wide channels</li>
-<li><code>EHT160</code> - applicable to IEEE 802.11be, 160 MHz wide channels</li>
-<li><code>EHT320</code> - applicable to IEEE 802.11be, 320 MHz wide channels</li>
-</ul></td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getHWModes">
-            
-            getHWModes<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3397">line 3397</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Gets a list of supported hwmodes.</p>
-<p>The hwmode values describe the frequency band and wireless standard
-versions supported by the wireless phy.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Array.&lt;string>
-                        
-                    
-            </td>
-            <td class="description last">Returns an array of valid hwmode values for this radio. Currently
-known mode values are:
-<ul>
-<li><code>a</code> - Legacy 802.11a mode, 5 GHz, up to 54 Mbit/s</li>
-<li><code>b</code> - Legacy 802.11b mode, 2.4 GHz, up to 11 Mbit/s</li>
-<li><code>g</code> - Legacy 802.11g mode, 2.4 GHz, up to 54 Mbit/s</li>
-<li><code>n</code> - IEEE 802.11n mode, 2.4 or 5 GHz, up to 600 Mbit/s</li>
-<li><code>ac</code> - IEEE 802.11ac mode, 5 GHz, up to 6770 Mbit/s</li>
-<li><code>ax</code> - IEEE 802.11ax mode, 2.4 or 5 GHz</li>
-<li>'be' - IEEE 802.11be mode, 2.4, 5 or 6 GHz</li>
-</ul></td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
         <h4 class="name" id="getI18n">
             
             getI18n<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
@@ -4482,7 +3789,7 @@ known mode values are:
     
         
         <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3438">line 3438</a>
+            <a href="network.js.html">network.js</a>, <a href="network.js.html#line4532">line 4532</a>
         </div>
         
     </div>
@@ -4493,7 +3800,7 @@ known mode values are:
     
     
     <div class="description">
-        <p>Get a string describing the wireless radio hardware.</p>
+        <p>Get a long description string for the wifi vlan.</p>
     </div>
     
 
@@ -4560,7 +3867,108 @@ known mode values are:
                         
                     
             </td>
-            <td class="description last">Returns the description string.</td>
+            <td class="description last">Returns a string containing the vlan id and the vlan name,
+if it is different than the vlan id</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getIfname">
+            
+            getIfname<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="network.js.html">network.js</a>, <a href="network.js.html#line4521">line 4521</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Get the Linux network device name of the wifi vlan.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        string
+                        
+                    
+            </td>
+            <td class="description last">Returns the current network device name for this wifi vlan.</td>
         </tr>
     
     </tbody>
@@ -4582,7 +3990,7 @@ known mode values are:
     
         
         <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3376">line 3376</a>
+            <a href="network.js.html">network.js</a>, <a href="network.js.html#line4491">line 4491</a>
         </div>
         
     </div>
@@ -4593,7 +4001,7 @@ known mode values are:
     
     
     <div class="description">
-        <p>Get the configuration name of this wireless radio.</p>
+        <p>Get the name of the wifi vlan.</p>
     </div>
     
 
@@ -4660,9 +4068,7 @@ known mode values are:
                         
                     
             </td>
-            <td class="description last">Returns the UCI section name (e.g. <code>radio0</code>) of the corresponding
-radio configuration which also serves as unique logical identifier
-for the wireless phy.</td>
+            <td class="description last">Returns the name.</td>
         </tr>
     
     </tbody>
@@ -4677,14 +4083,14 @@ for the wireless phy.</td>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="getScanList">
+        <h4 class="name" id="getNetwork">
             
-            getScanList<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Promise.&lt;Array.&lt;<a href="LuCI.network.html#.WifiScanResult">LuCI.network.WifiScanResult</a>>>}</span>
+            getNetwork<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3494">line 3494</a>
+            <a href="network.js.html">network.js</a>, <a href="network.js.html#line4511">line 4511</a>
         </div>
         
     </div>
@@ -4695,8 +4101,7 @@ for the wireless phy.</td>
     
     
     <div class="description">
-        <p>Trigger a wireless scan on this radio device and obtain a list of
-nearby networks.</p>
+        <p>Get the network of the wifi vlan.</p>
     </div>
     
 
@@ -4759,12 +4164,11 @@ nearby networks.</p>
             
             <td class="type">
             
-                        Promise.&lt;Array.&lt;<a href="LuCI.network.html#.WifiScanResult">LuCI.network.WifiScanResult</a>>>
+                        string
                         
                     
             </td>
-            <td class="description last">Returns a promise resolving to an array of scan result objects
-describing the networks found in the vicinity.</td>
+            <td class="description last">Returns the network.</td>
         </tr>
     
     </tbody>
@@ -4779,14 +4183,14 @@ describing the networks found in the vicinity.</td>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="getWifiNetwork">
+        <h4 class="name" id="getVlanId">
             
-            getWifiNetwork<span class="signature">(network)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Promise.&lt;<a href="LuCI.network.WifiNetwork.html">LuCI.network.WifiNetwork</a>>}</span>
+            getVlanId<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{number}</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3527">line 3527</a>
+            <a href="network.js.html">network.js</a>, <a href="network.js.html#line4501">line 4501</a>
         </div>
         
     </div>
@@ -4797,158 +4201,7 @@ describing the networks found in the vicinity.</td>
     
     
     <div class="description">
-        <p>Get the wifi network of the given name belonging to this radio device</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>network</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>The name of the wireless network to look up. This may be either an uci
-configuration section ID, a network ID in the form <code>radio#.network#</code>
-or a Linux network device name like <code>wlan0</code> which is resolved to the
-corresponding configuration section through <code>ubus</code> runtime information.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Promise.&lt;<a href="LuCI.network.WifiNetwork.html">LuCI.network.WifiNetwork</a>>
-                        
-                    
-            </td>
-            <td class="description last">Returns a promise resolving to a <code>Network.WifiNetwork</code> instance
-representing the wireless network and rejecting with <code>null</code> if
-the given network could not be found or is not associated with
-this radio device.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getWifiNetworks">
-            
-            getWifiNetworks<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Promise.&lt;Array.&lt;<a href="LuCI.network.WifiNetwork.html">LuCI.network.WifiNetwork</a>>>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3546">line 3546</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Get all wireless networks associated with this wireless radio device.</p>
+        <p>Get the vlan id of the wifi vlan.</p>
     </div>
     
 
@@ -5011,367 +4264,16 @@ this radio device.</td>
             
             <td class="type">
             
-                        Promise.&lt;Array.&lt;<a href="LuCI.network.WifiNetwork.html">LuCI.network.WifiNetwork</a>>>
+                        number
                         
                     
             </td>
-            <td class="description last">Returns a promise resolving to an array of <code>Network.WifiNetwork</code>
-instances representing the wireless networks associated with this
-radio device.</td>
+            <td class="description last">Returns the vlan id.</td>
         </tr>
     
     </tbody>
 </table>
 
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="isDisabled">
-            
-            isDisabled<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{boolean}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3364">line 3364</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Checks whether this wireless radio is disabled.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        boolean
-                        
-                    
-            </td>
-            <td class="description last">Returns <code>true</code> when the wireless radio is marked as disabled in <code>ubus</code>
-runtime state or when the <code>disabled</code> option is set in the corresponding
-UCI configuration.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="isUp">
-            
-            isUp<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{boolean}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3505">line 3505</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Check whether the wireless radio is marked as up in the <code>ubus</code>
-runtime state.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        boolean
-                        
-                    
-            </td>
-            <td class="description last">Returns <code>true</code> when the radio device is up, else <code>false</code>.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="set">
-            
-            set<span class="signature">(opt, value)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="network.js.html">network.js</a>, <a href="network.js.html#line3352">line 3352</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Set the given UCI option of this network to the given value.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>opt</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>The name of the UCI option to set.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">null</span>
-|
-
-<span class="param-type">string</span>
-|
-
-<span class="param-type">Array.&lt;string></span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>The value to set or <code>null</code> to remove the given option from the
-configuration.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
     
     
     
