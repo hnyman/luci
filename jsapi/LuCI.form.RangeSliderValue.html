@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: MultiValue</title>
+    <title>Class: RangeSliderValue</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -3827,7 +3827,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="LuCI.form.MultiValue.html">Class: MultiValue</h1>
+        <h1 class="page-title" data-filename="LuCI.form.RangeSliderValue.html">Class: RangeSliderValue</h1>
         
 
 
@@ -3838,12 +3838,13 @@
     <h2>
         <span class="ancestors"><a href="LuCI.html">LuCI</a><a href="LuCI.form.html">.form</a>.</span>
     
-    MultiValue
+    RangeSliderValue
     </h2>
     
-        <div class="class-description"><p>The <code>MultiValue</code> class is a modified variant of the <code>DynamicList</code> element
-which leverages the <a href="LuCI.ui.Dropdown.html"><code>LuCI.ui.Dropdown</code></a> widget to implement a multi
-select dropdown element.</p></div>
+        <div class="class-description"><p>The <code>RangeSliderValue</code> class implements a range slider input using
+<code>LuCI.ui.RangeSlider</code>. It is useful in cases where a value shall fall
+within a predetermined range. This helps omit various error checks for such
+values. The currently chosen value is displayed to the side of the slider.</p></div>
     
 </header>  
 
@@ -3855,14 +3856,14 @@ select dropdown element.</p></div>
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="MultiValue">
+        <h4 class="name" id="RangeSliderValue">
             
-            new LuCI.form.MultiValue<span class="signature">(form, section, option, <span class="optional">title</span>, <span class="optional">description</span>)</span>
+            new LuCI.form.RangeSliderValue<span class="signature">(form, section, option, <span class="optional">title</span>, <span class="optional">description</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="form.js.html">form.js</a>, <a href="form.js.html#line4428">line 4428</a>
+            <a href="form.js.html">form.js</a>, <a href="form.js.html#line4122">line 4122</a>
         </div>
         
     </div>
@@ -4100,7 +4101,7 @@ option to the section.</p></td>
         <h3 class="subsection-title">Extends</h3>
         
         <ul>
-            <li><a href="LuCI.form.DynamicList.html">LuCI.form.DynamicList</a></li>
+            <li><a href="LuCI.form.Value.html">LuCI.form.Value</a></li>
         </ul>
     
     
@@ -4119,7 +4120,7 @@ option to the section.</p></td>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="create">create<span class="type-signature type boolean">boolean</span> </h4>
+        <h4 class="name" id="calculate">calculate<span class="type-signature type function">function</span> </h4>
     </div>
     
     
@@ -4127,7 +4128,11 @@ option to the section.</p></td>
 <dd>
     
     <div class="description">
-        <p>Allows custom value entry in addition to those already specified.</p>
+        <p>Override the calculate action.</p>
+<p>When this property is set to a function, it is invoked when the slider
+is adjusted. This might be useful to calculate and display a result which
+is more meaningful than the currently chosen value. The calculated value
+is displayed below the slider.</p>
     </div>
     
     
@@ -4167,7 +4172,7 @@ option to the section.</p></td>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="display_size">display_size<span class="type-signature type number">number</span> </h4>
+        <h4 class="name" id="calcunits">calcunits<span class="type-signature type string">string</span> </h4>
     </div>
     
     
@@ -4175,9 +4180,8 @@ option to the section.</p></td>
 <dd>
     
     <div class="description">
-        <p>Allows to specify the <a href="LuCI.ui.Dropdown.html#.InitOptions"><code>display_items</code></a>
-property of the underlying dropdown widget. If omitted, the value of
-the <code>size</code> property is used or <code>3</code> when <code>size</code> is also unspecified.</p>
+        <p>Define the units of the calculated value.</p>
+<p>Suffix a unit string to the calculated value, e.g. 'seconds' or 'dBm'.</p>
     </div>
     
     
@@ -4217,7 +4221,7 @@ the <code>size</code> property is used or <code>3</code> when <code>size</code> 
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="dropdown_size">dropdown_size<span class="type-signature type number">number</span> </h4>
+        <h4 class="name" id="default">default<span class="type-signature type string">string</span> </h4>
     </div>
     
     
@@ -4225,9 +4229,9 @@ the <code>size</code> property is used or <code>3</code> when <code>size</code> 
 <dd>
     
     <div class="description">
-        <p>Allows to specify the <a href="LuCI.ui.Dropdown.html#.InitOptions"><code>dropdown_items</code></a>
-property of the underlying dropdown widget. If omitted, the value of
-the <code>size</code> property is used or <code>-1</code> when <code>size</code> is also unspecified.</p>
+        <p>Set the default value for the slider. The default value is elided during
+save: meaning, a currently chosen value which matches the default is
+not saved.</p>
     </div>
     
     
@@ -4267,7 +4271,7 @@ the <code>size</code> property is used or <code>-1</code> when <code>size</code>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="allowduplicates">allowduplicates<span class="type-signature type boolean">boolean</span> </h4>
+        <h4 class="name" id="max">max<span class="type-signature type number">number</span> </h4>
     </div>
     
     
@@ -4275,9 +4279,7 @@ the <code>size</code> property is used or <code>-1</code> when <code>size</code>
 <dd>
     
     <div class="description">
-        <p>Allows the underlying form controls to have multiple identical values.</p>
-<p>Default is <code>null</code>. If <code>true</code>, the underlying form value will
-not be checked for duplication.</p>
+        <p>Maximum value the slider can represent.</p>
     </div>
     
     
@@ -4299,7 +4301,160 @@ not be checked for duplication.</p>
     
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>100</li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="min">min<span class="type-signature type number">number</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Minimum value the slider can represent.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="step">step<span class="type-signature type string">string</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Step size for each tick of the slider, or the special value &quot;any&quot; when
+handling arbitrary precision floating point numbers.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="usecalc">usecalc<span class="type-signature type boolean">boolean</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Whether to use the calculated result of the chosen value instead of the
+chosen value: the result of the calculation returned by the
+<code>calculate</code> function on the chosen value
+is written to the configuration instead of the chosen value. The
+<code>calcunits</code> displayed units are not included.</p>
+<p>Note: Implementers of the <code>calculate</code> function shall be
+mindful that it may be possible to return a NaN value which is seldom a
+sensible input for the underlying daemon or system. Verification of any
+calculated value is an exercise left to the implementer.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
     
     
@@ -5840,17 +5995,15 @@ argument, this parameter is ignored.</p></td>
         
             
 <dt>
-    <div class="nameContainer inherited">
+    <div class="nameContainer">
         <h4 class="name" id="formvalue">
-            
-                <span class="inherited"><a href="LuCI.form.AbstractValue.html#formvalue">inherited</a></span>
             
             formvalue<span class="signature">(section_id)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{*}</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="form.js.html">form.js</a>, <a href="form.js.html#line1860">line 1860</a>
+            <a href="form.js.html">form.js</a>, <a href="form.js.html#line4260">line 4260</a>
         </div>
         
     </div>
@@ -5862,9 +6015,6 @@ argument, this parameter is ignored.</p></td>
     
     <div class="description">
         <p>Query the current form input value.</p>
-<p>The default implementation of this method returns the current input
-value of the underlying <a href="LuCI.ui.AbstractElement.html"><code>LuCI.ui</code></a> widget.
-It may be overridden by user code to handle input values differently.</p>
     </div>
     
 
@@ -5952,33 +6102,6 @@ It may be overridden by user code to handle input values differently.</p>
     
     
     
-    <h5>Throws:</h5>
-    
-            
-
-<dl>
-    <dt>
-        <div class="param-desc">
-        <p>Throws a <code>TypeError</code> exception when no <code>section_id</code> was specified.</p>
-        </div>
-    </dt>
-    <dt>
-        <dl>
-            <dt>
-                Type
-            </dt>
-            <dd>
-                
-<span class="param-type">TypeError</span>
-
-
-            </dd>
-        </dl>
-    </dt>
-</dl>
-
-
-        
     
     
     <h5>Returns:</h5>
