@@ -1,0 +1,217 @@
+/*!
+ * luci-plot.css
+ *
+ * Styles for the luci-plot SVG plotting library.
+ *
+ * Licensed under the Apache License, Version 2.0.
+ */
+
+body {
+    font-family: sans-serif;
+    margin: 30px;
+    background: #f8f8f8;
+}
+
+.test-plot {
+    max-width: 900px;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ccc;
+}
+
+.luci-plot {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: crosshair;
+}
+
+.luci-plot-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.luci-plot-grid line {
+    stroke: #ddd;
+    stroke-width: 1;
+}
+
+.luci-plot-x-axis line {
+    stroke: #777;
+    stroke-width: 1;
+}
+
+.luci-plot-axis-label {
+    fill: #555;
+    font-size: 10px;
+}
+
+.luci-plot-line {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.luci-plot-series-0 {
+    stroke: #268bd2;
+}
+
+.luci-plot-series-1 {
+    stroke: #dc322f;
+}
+
+.luci-plot-series-2 {
+    stroke: #859900;
+}
+.luci-plot-series-3 {
+    stroke: #b58900;
+}
+
+.luci-plot-series-4 {
+    stroke: #6c71c4;
+}
+
+.luci-plot-series-5 {
+    stroke: #2aa198;
+}
+
+.luci-plot-series-6 {
+    stroke: #d33682;
+}
+
+.luci-plot-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 8px;
+    font-size: 0.9em;
+}
+
+.luci-plot-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.luci-plot-marker {
+    width: 16px;
+    height: 3px;
+    display: inline-block;
+}
+
+.luci-plot-marker-0 {
+    background: #268bd2;
+}
+
+.luci-plot-marker-1 {
+    background: #dc322f;
+}
+
+.luci-plot-marker-2 {
+    background: #859900;
+}
+
+.luci-plot-marker-3 {
+    background: #b58900;
+}
+
+.luci-plot-marker-4 {
+    background: #6c71c4;
+}
+
+.luci-plot-marker-5 {
+    background: #2aa198;
+}
+
+.luci-plot-marker-6 {
+    background: #d33682;
+}
+
+/* Hover */
+
+.luci-plot-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+}
+.luci-plot-hover-overlay {
+    fill: transparent;
+    pointer-events: all;
+}
+
+.luci-plot-hover-line {
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.luci-plot-hover-point {
+    fill: white;
+    stroke-width: 2;
+    pointer-events: none;
+}
+
+.luci-plot-tooltip {
+    position: absolute;
+    z-index: 10;
+    min-width: 140px;
+    padding: 7px 9px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    font-size: 12px;
+    line-height: 1.35;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.luci-plot-tooltip[hidden] {
+    display: none;
+}
+
+.luci-plot-tooltip-x {
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.luci-plot-tooltip-row {
+    display: grid;
+    grid-template-columns: 10px 1fr auto;
+    gap: 6px;
+    align-items: center;
+}
+
+.luci-plot-tooltip-marker {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.luci-plot-tooltip-value {
+    padding-left: 8px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.luci-plot-band {
+    stroke: none;
+    opacity: 0.14;
+    pointer-events: none;
+}
+
+.luci-plot-y-axis line {
+    stroke: currentColor;
+    opacity: 0.55;
+    stroke-width: 1;
+}
+
+.luci-plot-y-axis-title {
+    font-weight: 600;
+}
+
+
