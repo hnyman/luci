@@ -4,6 +4,7 @@
 'require poll';
 'require ui';
 'require uci';
+'require luci-plot as plot';
 'require statistics.rrdtool as rrdtool';
 
 let pollFn = null;
@@ -13,6 +14,41 @@ let activeInstance = null;
 return view.extend({
 	load() {
 		return rrdtool.load();
+	},
+
+	renderPlot(diagram) {
+		const target = E('div', {
+			'style': 'width:100%'
+		});
+
+		const entries = Array.from(
+			{ length: diagram.series[0]?.plotValues.length || 0 },
+			(_, i) => {
+				const entry = {
+					timestamp: diagram.start + i * diagram.step
+				};
+
+				diagram.series.forEach((series, j) => {
+					entry['s' + j] = series.plotValues[i];
+				});
+
+				return entry;
+			}
+		);
+
+		plot.render(target, entries, {
+			x: {
+				type: 'time',
+				key: 'timestamp'
+			},
+			series: diagram.series.map((series, j) => ({
+				key: 's' + j,
+				label: series.label,
+				color: series.color
+			}))
+		});
+
+		return target;
 	},
 
 	updatePluginTab(host, span, time, ev) {
@@ -61,10 +97,10 @@ return view.extend({
 			else {
 				return rrdtool.render(plugin, instance[0], false, host.value, span.value, width, null, cache);
 			}
-		})).then(function(blobs) {
+		})).then((blobs) => {
 			const multiple = blobs.length > 1;
 
-			dom.content(container, E('div', {}, blobs.map(function(blobs, i) {
+			dom.content(container, E('div', {}, blobs.map((blobs, i) => {
 				const plugin_instance = i ? render_instances[i][0] : plugin_instances.join('|');
 				const title = render_instances[i][1];
 
@@ -76,11 +112,7 @@ return view.extend({
 					'data-plugin-instance': plugin_instance,
 					'data-is-index': i || render_instances.length == 1 ? null : true,
 					'cbi-tab-active'(ev) { activeInstance = ev.target.getAttribute('data-plugin-instance') }
-				}, blobs.map(function(blob) {
-					return E('img', {
-						'src': URL.createObjectURL(new Blob([blob], { type: 'image/png' }))
-					});
-				}));
+					},blobs.map(diagram => this.renderPlot(diagram)));
 			})));
 
 			if (multiple)
@@ -92,10 +124,6 @@ return view.extend({
 
 	updateGraphs(host, span, time, container, ev) {
 		const plugin_names = rrdtool.pluginNames(host.value);
-
-		container.querySelectorAll('img').forEach(function(img) {
-			URL.revokeObjectURL(img.src);
-		});
 
 		dom.content(container, null);
 
@@ -123,35 +151,31 @@ return view.extend({
 	},
 
 	refreshGraphs(host, span, time, container) {
-		const div = document.querySelector('[data-plugin="%s"][data-plugin-instance="%s"]'.format(activePlugin, activeInstance || ''));
+		const div = document.querySelector(
+			'[data-plugin="%s"][data-plugin-instance="%s"]'.format(
+				activePlugin, activeInstance || ''
+			)
+		);
+
+		if (!div)
+			return Promise.resolve();
+
 		const width = Math.max(200, container.offsetWidth - 100);
-		const render_instances = activeInstance.split(/\|/);
+		const render_instances = (activeInstance || '').split(/\|/);
 
-		return Promise.all(render_instances.map(function(render_instance) {
-			return rrdtool.render(activePlugin, render_instance || '', div.hasAttribute('data-is-index'), host.value, span.value, width);
-		})).then(function(blobs) {
-			return Array.prototype.concat.apply([], blobs);
-		}).then(function(blobs) {
-			return Promise.all(blobs.map(function(blob) {
-				return new Promise(function(resolveFn, rejectFn) {
-					const img = E('img', { 'src': URL.createObjectURL(new Blob([blob], { type: 'image/png' })) });
-					img.onload = function(ev) { resolveFn(img) };
-					img.onerror = function(ev) { resolveFn(img) };
-				});
-			})).then(function(imgs) {
-				while (div.childNodes.length > imgs.length)
-					div.removeChild(div.lastElementChild);
+		return Promise.all(render_instances.map(render_instance =>
+		rrdtool.render(
+			activePlugin,
+			render_instance || '',
+			div.hasAttribute('data-is-index'),
+					   host.value,
+				 span.value,
+				 width
+		)
+		)).then(results => {
+			const diagrams = [].concat(...results);
 
-				for (let i = 0; i < imgs.length; i++) {
-					if (i < div.childNodes.length) {
-						URL.revokeObjectURL(div.childNodes[i].src);
-						div.childNodes[i].src = imgs[i].src;
-					}
-					else {
-						div.appendChild(E('img', { 'src': imgs[i].src }));
-					}
-				}
-			});
+			dom.content(div, diagrams.map(diagram => this.renderPlot(diagram)));
 		});
 	},
 

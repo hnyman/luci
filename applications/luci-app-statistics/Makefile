@@ -9,10 +9,13 @@ include $(TOPDIR)/rules.mk
 PKG_LICENSE:=Apache-2.0
 
 LUCI_TITLE:=LuCI Statistics Application
+
 LUCI_DEPENDS:= \
 	+luci-base \
+	+luci-lib-plot \
+	+rrdtool \
+	+rpcd-mod-rrd \
 	+collectd \
-	+rrdtool1 \
 	+collectd-mod-rrdtool \
 	+collectd-mod-iwinfo \
 	+collectd-mod-cpu \

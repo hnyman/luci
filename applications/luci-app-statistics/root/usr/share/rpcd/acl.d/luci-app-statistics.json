@@ -14,7 +14,6 @@
 				"/proc/partitions": [ "read" ],
 				"/proc/sys/kernel/hostname": [ "read" ],
 				"/tmp/rrd": [ "list" ],
-				"/usr/bin/rrdtool graph - -a PNG -s *": [ "exec" ],
 				"/usr/lib/collectd": [ "list" ],
 				"/usr/sbin/iptables-save": [ "exec" ],
 				"/usr/sbin/ip6tables-save": [ "exec" ],
@@ -25,7 +24,8 @@
 				"/www/luci-static/resources/statistics/rrdtool/definitions": [ "list" ]
 			},
 			"ubus": {
-				"file": [ "list", "read" ]
+				"file": [ "list", "read" ],
+				 "rrd": [ "xport" ]
 			},
 			"uci": [ "luci_statistics" ]
 		},
